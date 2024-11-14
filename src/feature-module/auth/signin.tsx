@@ -1,184 +1,217 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react';
 import ImageWithBasePath from '../../core/common/imageWithBasePath'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { all_routes } from '../router/all_routes'
+import { firebaseDB, auth } from '../../firebase/firebase'; // Firebase auth 가져오기
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 const Signin = () => {
   const routes = all_routes;
   const [isPasswordVisible, setPasswordVisible] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible((prevState) => !prevState);
   };
-  useEffect(() => {
-    localStorage.setItem('menuOpened', '')
-  }, [])
-  
+
+  // 로그인 처리 함수
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert('이메일과 비밀번호를 입력하세요.');
+      return;
+    }
+
+    try {
+      // Firebase로 로그인 처리
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // 로그인 성공 후 Firestore에서 사용자 데이터 조회
+      const userDocRef = doc(firebaseDB, 'users', user.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        console.log('사용자 데이터:', userData);
+        // 예를 들어, 사용자의 역할이나 프로필 정보를 얻을 수 있습니다.
+      } else {
+        console.log('사용자 데이터가 없습니다.');
+      }
+
+      // 로그인 성공 시 routes.index로 이동
+      navigate(routes.index);
+    } catch (error) {
+      alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
+      console.error(error);
+    }
+  };
+
   return (
     <>
-    <div className="container-fuild">
-      <div className=" w-100 overflow-hidden position-relative flex-wrap d-block vh-100">
-        <div className="row">
-          <div className="col-lg-6 col-md-12 col-sm-12">
-            <div className="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap login-bg1 ">
-              <div className="col-md-9 mx-auto p-4">
-                <form >
-                  <div>
-                    <div className=" mx-auto mb-5 text-center">
-                      <ImageWithBasePath
-                        src="assets/img/full-logo.svg"
-                        className="img-fluid"
-                        alt="Logo"
-                      />
-                    </div>
-                    <div className="card">
-                      <div className="card-body">
-                        <div className=" mb-4">
-                          <h2 className="mb-2">Welcome!</h2>
-                          <p className="mb-0 fs-16">
-                            Sign in to see what you’ve missed.
-                          </p>
-                        </div>
-                        <div className="mb-3 ">
-                          <label className="form-label">User Name</label>
-                          <div className="input-icon mb-3 position-relative">
-                            <input
-                              type="text"
-                              defaultValue=""
-                              className="form-control"
-                            />
-                            <span className="input-icon-addon">
-                              <i className="ti ti-user" />
-                            </span>
+      <div className="container-fuild">
+        <div className="w-100 overflow-hidden position-relative flex-wrap d-block vh-100">
+          <div className="row">
+            <div className="col-lg-6 col-md-12 col-sm-12">
+              <div className="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap login-bg1">
+                <div className="col-md-9 mx-auto p-4">
+                  <form>
+                    <div>
+                      <div className="mx-auto mb-5 text-center">
+                        <ImageWithBasePath
+                          src="assets/img/full-logo.svg"
+                          className="img-fluid"
+                          alt="Logo"
+                        />
+                      </div>
+                      <div className="card">
+                        <div className="card-body">
+                          <div className="mb-4">
+                            <h2 className="mb-2">환영합니다!</h2>
+                            <p className="mb-0 fs-16">로그인하여 놓친 내용을 확인하세요.</p>
                           </div>
-                          <label className="form-label">Password</label>
-                          <div className="input-icon ">
-                          <input
-                            type={isPasswordVisible ? "text" : "password"}
-                            className="pass-input form-control"
-                          />
-                          <span
-                            className={`ti toggle-password ${
-                              isPasswordVisible ? "ti-eye" : "ti-eye-off"
-                            }`}
-                            onClick={togglePasswordVisibility}
-                          ></span>
-                          </div>
-                        </div>
-                        <div className="form-wrap form-wrap-checkbox mb-3">
-                          <div className="d-flex align-items-center">
-                            <div className="form-check form-check-md mb-0">
+                          <div className="mb-3">
+                            <label className="form-label">유저이름</label>
+                            <div className="input-icon mb-3 position-relative">
                               <input
-                                className="form-check-input mt-0"
-                                type="checkbox"
+                                type="text"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="form-control"
                               />
+                              <span className="input-icon-addon">
+                                <i className="ti ti-user" />
+                              </span>
                             </div>
-                            <p className=" mb-0 ">Remember Me</p>
-                          </div>
-                          <div className="text-end ">
-                            <Link
-                              to={routes.forgotPassword}
-                              className="link-primary"
-                            >
-                              Forgot Password?
-                            </Link>
-                          </div>
-                        </div>
-                        <div className="mb-4">
-                          <Link
-                            to={routes.index}
-                            className="btn btn-primary w-100 justify-content-center"
-                          >
-                            Sign In
-                          </Link>
-                        </div>
-                        <div className="login-or mb-3">
-                          <span className="span-or">Or sign in with </span>
-                        </div>
-                        <div className="d-flex align-items-center justify-content-center flex-wrap">
-                          <div className="text-center me-2 flex-fill">
-                            <Link
-                              to="#"
-                              className="fs-16 btn btn-white btn-shadow d-flex align-items-center justify-content-center"
-                            >
-                              <ImageWithBasePath
-                                className="img-fluid me-3"
-                                src="assets/img/icons/google.svg"
-                                alt="Facebook"
+                            <label className="form-label">패스워드</label>
+                            <div className="input-icon">
+                              <input
+                                type={isPasswordVisible ? 'text' : 'password'}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="pass-input form-control"
                               />
-                              Google
-                            </Link>
+                              <span
+                                className={`ti toggle-password ${isPasswordVisible ? 'ti-eye' : 'ti-eye-off'}`}
+                                onClick={togglePasswordVisibility}
+                              ></span>
+                            </div>
                           </div>
-                          <div className="text-center flex-fill">
-                            <Link
-                              to="#"
-                              className="fs-16 btn btn-white btn-shadow d-flex align-items-center justify-content-center"
+                          <div className="form-wrap form-wrap-checkbox mb-3">
+                            <div className="d-flex align-items-center">
+                              <div className="form-check form-check-md mb-0">
+                                <input
+                                  id="autoLogin"
+                                  className="form-check-input mt-0"
+                                  type="checkbox"
+                                />
+                              </div>
+                              <label className="mb-0" htmlFor="autoLogin">자동 로그인</label>
+                            </div>
+                            <div className="text-end">
+                              <Link to={routes.forgotPassword} className="link-primary">
+                                패스워드 찾기?
+                              </Link>
+                            </div>
+                          </div>
+                          <div className="mb-4">
+                            <button
+                              type="button"
+                              className="btn btn-primary w-100 justify-content-center"
+                              onClick={handleLogin}  // 로그인 시 로그인 함수 호출
                             >
-                              <ImageWithBasePath
-                                className="img-fluid me-3"
-                                src="assets/img/icons/facebook.svg"
-                                alt="Facebook"
-                              />
-                              Facebook
-                            </Link>
+                              로그인
+                            </button>
+                          </div>
+                          <div className="login-or mb-3">
+                            <span className="span-or">소셜 로그인</span>
+                          </div>
+                          <div className="d-flex align-items-center justify-content-center flex-wrap">
+                            <div className="text-center me-2 flex-fill">
+                              <Link
+                                to="#"
+                                className="fs-16 btn btn-white btn-shadow d-flex align-items-center justify-content-center"
+                              >
+                                <ImageWithBasePath
+                                  className="img-fluid me-3"
+                                  src="assets/img/icons/google.svg"
+                                  alt="Google"
+                                />
+                                Google
+                              </Link>
+                            </div>
+                            <div className="text-center flex-fill">
+                              <Link
+                                to="#"
+                                className="fs-16 btn btn-white btn-shadow d-flex align-items-center justify-content-center"
+                              >
+                                <ImageWithBasePath
+                                  className="img-fluid me-3"
+                                  src="assets/img/icons/facebook.svg"
+                                  alt="Facebook"
+                                />
+                                Facebook
+                              </Link>
+                            </div>
                           </div>
                         </div>
                       </div>
+                      <div className="mt-5 text-center">
+                        <p className="mb-0 text-gray-9">
+                          계정이 없으신가요?{' '}
+                          <Link to={routes.signup} className="link-primary">
+                            회원가입
+                          </Link>
+                        </p>
+                      </div>
                     </div>
-                    <div className="mt-5 text-center">
-                      <p className="mb-0 text-gray-9">
-                        Don’t have a account?{" "}
-                        <Link to={routes.signup} className="link-primary">
-                          Sign Up
-                        </Link>
-                      </p>
-                    </div>
-                  </div>
-                </form>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-lg-6 p-0">
-            <div className="d-lg-flex align-items-center justify-content-center position-relative d-lg-block d-none flex-wrap vh-100 overflowy-auto login-bg2 ">
-              <div className="floating-bg">
-                <ImageWithBasePath src="assets/img/bg/circle-1.png" alt="Img" />
-                <ImageWithBasePath src="assets/img/bg/circle-2.png" alt="Img" />
-                <ImageWithBasePath src="assets/img/bg/emoji-01.svg" alt="Img" />
-                <ImageWithBasePath src="assets/img/bg/emoji-02.svg" alt="Img" />
-                <ImageWithBasePath src="assets/img/bg/emoji-03.svg" alt="Img" />
-                <ImageWithBasePath src="assets/img/bg/emoji-04.svg" alt="Img" />
-                <ImageWithBasePath src="assets/img/bg/right-arrow-01.svg" alt="Img" />
-                <ImageWithBasePath src="assets/img/bg/right-arrow-02.svg" alt="Img" />
-              </div>
-              <div className="floating-avatar ">
-                <span className="avatar avatar-xl avatar-rounded border border-white">
-                  <ImageWithBasePath src="assets/img/profiles/avatar-12.jpg" alt="img" />
-                </span>
-                <span className="avatar avatar-xl avatar-rounded border border-white">
-                  <ImageWithBasePath src="assets/img/profiles/avatar-03.jpg" alt="img" />
-                </span>
-                <span className="avatar avatar-xl avatar-rounded border border-white">
-                  <ImageWithBasePath src="assets/img/profiles/avatar-02.jpg" alt="img" />
-                </span>
-                <span className="avatar avatar-xl avatar-rounded border border-white">
-                  <ImageWithBasePath src="assets/img/profiles/avatar-05.jpg" alt="img" />
-                </span>
-              </div>
-              <div className="text-center">
-                <ImageWithBasePath
-                  src="assets/img/bg/login-bg-1.png"
-                  className="login-img"
-                  alt="Img"
-                />
+            <div className="col-lg-6 p-0">
+              <div className="d-lg-flex align-items-center justify-content-center position-relative d-lg-block d-none flex-wrap vh-100 overflowy-auto login-bg2">
+                <div className="floating-bg">
+                  <ImageWithBasePath src="assets/img/bg/circle-1.png" alt="Img" />
+                  <ImageWithBasePath src="assets/img/bg/circle-2.png" alt="Img" />
+                  <ImageWithBasePath src="assets/img/bg/emoji-01.svg" alt="Img" />
+                  <ImageWithBasePath src="assets/img/bg/emoji-02.svg" alt="Img" />
+                  <ImageWithBasePath src="assets/img/bg/emoji-03.svg" alt="Img" />
+                  <ImageWithBasePath src="assets/img/bg/emoji-04.svg" alt="Img" />
+                  <ImageWithBasePath src="assets/img/bg/right-arrow-01.svg" alt="Img" />
+                  <ImageWithBasePath src="assets/img/bg/right-arrow-02.svg" alt="Img" />
+                </div>
+                <div className="floating-avatar">
+                  <span className="avatar avatar-xl avatar-rounded border border-white">
+                    <ImageWithBasePath src="assets/img/profiles/avatar-12.jpg" alt="img" />
+                  </span>
+                  <span className="avatar avatar-xl avatar-rounded border border-white">
+                    <ImageWithBasePath src="assets/img/profiles/avatar-03.jpg" alt="img" />
+                  </span>
+                  <span className="avatar avatar-xl avatar-rounded border border-white">
+                    <ImageWithBasePath src="assets/img/profiles/avatar-02.jpg" alt="img" />
+                  </span>
+                  <span className="avatar avatar-xl avatar-rounded border border-white">
+                    <ImageWithBasePath src="assets/img/profiles/avatar-05.jpg" alt="img" />
+                  </span>
+                </div>
+                <div className="text-center">
+                  <ImageWithBasePath
+                    src="assets/img/bg/login-bg-1.png"
+                    className="login-img"
+                    alt="Img"
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </>
+  );
+};
 
-  )
-}
-
-export default Signin
+export default Signin;

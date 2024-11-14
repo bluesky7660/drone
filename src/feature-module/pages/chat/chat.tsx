@@ -68,8 +68,8 @@ const Chat = () => {
                 />
               </div>
               <div className="ms-2 overflow-hidden">
-                <h6>Edward Lietz</h6>
-                <span className="last-seen">Online</span>
+                <h6>친구</h6>{/* 채팅유저이름 */}
+                <span className="last-seen">Online</span>{/* 채팅유저 상태 */}
               </div>
             </div>
             <div className="chat-options">
