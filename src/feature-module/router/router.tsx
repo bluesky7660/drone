@@ -9,22 +9,30 @@ import AdminFeature from "../adminFeature";
 import AdminAuthFeature from "../adminAuthFeature";
 import AdminLogin from "../admin/authentication/login";
 
+import PrivateRoute from "@router/PrivateRoute";
+
 const Mainapp: React.FC = () => {
   const location = useLocation();
+  console.log("지금:"+document.title);
 
   // Find the current route in either public or auth routes
   const currentRoute = publicRoutes.find(route => route.path === location.pathname) || 
                        authRoutes.find(route => route.path === location.pathname);
-
+                       
+    if (currentRoute) {
+    console.log("currentRoute:", currentRoute.title);
+  } else {
+    console.log("No route found for this path");
+  }
   // Construct the full title
   const fullTitle = currentRoute?.title 
     ? `${currentRoute.title} - DreamsChat`
     : "DreamsChat";
-
+  
   useEffect(() => {
     document.title = fullTitle;
+    
   }, [fullTitle]);
-
   const [styleLoaded, setStyleLoaded] = useState(false);
 
   useEffect(() => {
@@ -50,7 +58,12 @@ const Mainapp: React.FC = () => {
       </Helmet>
       <Routes>
         <Route path="/" element={<Signin />} />
-        <Route element={<Feature />}>
+        {/* <Route element={<Feature />}>
+          {publicRoutes.map((route, idx) => (
+            <Route path={route.path} element={route.element} key={idx} />
+          ))}
+        </Route> */}
+        <Route element={<PrivateRoute element={<Feature />} />}>
           {publicRoutes.map((route, idx) => (
             <Route path={route.path} element={route.element} key={idx} />
           ))}

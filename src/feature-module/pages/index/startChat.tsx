@@ -1,8 +1,11 @@
-import React from 'react'
+import React, {  useContext } from 'react';
 import ImageWithBasePath from '../../../core/common/imageWithBasePath'
+import { MemberContext } from '@context/memberContext'
 import { Link } from 'react-router-dom'
 
 const StartChat = () => {
+  const { state } = useContext(MemberContext)!;
+  const userName = state.mmNickName || state.mmName;
   return (
     <>
   {/* Chat */}
@@ -17,7 +20,7 @@ const StartChat = () => {
           />
         </span>
         <h6>
-          Welcome! Salom
+          환영합니다! {userName}
           <ImageWithBasePath
             src="assets/img/icons/emoji-01.svg"
             alt="Image"
@@ -25,7 +28,7 @@ const StartChat = () => {
           />
         </h6>
       </div>
-      <p>Choose a person or group to start chat with them.</p>
+      <p>대화할 사람이나 그룹을 선택하세요.</p>
       <Link
         to="#"
         className="btn btn-primary"
@@ -33,7 +36,7 @@ const StartChat = () => {
         data-bs-target="#new-chat"
       >
         <i className="ti ti-location me-2" />
-        Invite Contacts
+          연락처 초대
       </Link>
     </div>
   </div>

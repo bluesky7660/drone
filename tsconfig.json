@@ -25,9 +25,11 @@
       "node"
     ],
     "allowImportingTsExtensions": false,
-    "baseUrl": "./src",  // baseUrl 설정 추가
+    "baseUrl": "src",  // src 폴더를 기준으로 경로 설정
     "paths": {
-      "@/*": ["*"]  // @ 경로 별칭 설정 추가
+      "@":["/*"],
+      "@context/*": ["context/*"],  // @ 경로 별칭 설정 추가
+      "@router/*": ["feature-module/router/*"]
     }
   },
   "include": [

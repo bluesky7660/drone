@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ImageWithBasePath from '../../core/common/imageWithBasePath'
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { all_routes } from '../router/all_routes'
+import { MemberContext } from '@context/memberContext';
 import { firebaseDB, auth } from '../../firebase/firebase'; // Firebase auth 가져오기
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 
 const Signin = () => {
   const routes = all_routes;
+  const { dispatch } = useContext(MemberContext); // useContext로 상태 가져오기
   const [isPasswordVisible, setPasswordVisible] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('sky7660@gmail.com');
+  const [password, setPassword] = useState('123456abc@!');
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -31,19 +33,37 @@ const Signin = () => {
       const user = userCredential.user;
 
       // 로그인 성공 후 Firestore에서 사용자 데이터 조회
-      const userDocRef = doc(firebaseDB, 'users', user.uid);
+      const userDocRef = doc(firebaseDB, 'member', user.uid);
       const userDocSnap = await getDoc(userDocRef);
 
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data();
+
+        // mmDelNy가 true(삭제된 계정)인 경우 로그인 차단
+        if (userData.mmDelNy) {
+          alert('탈퇴된 계정입니다.');
+          return;
+        }
         console.log('사용자 데이터:', userData);
+        // 로그인 후 받아온 회원 정보 상태에 저장
+        const memberData = {
+          mmBirthDate: userData.mmBirthDate,
+          mmDelNy: userData.mmDelNy,
+          mmEmail: userData.mmEmail,
+          mmName: userData.mmName,
+          mmNickName: userData.mmNickName,
+          mmPassword: userData.mmPassword,
+          mmPhoneNum: userData.mmPhoneNum,
+          mmRegDate: userData.mmRegDate,
+        };
+        console.log('memberData 데이터:', memberData);
+        dispatch({ type: 'SET_MEMBER', payload: memberData });
+        // 로그인 성공 시 routes.index로 이동
+        navigate(routes.index);
         // 예를 들어, 사용자의 역할이나 프로필 정보를 얻을 수 있습니다.
       } else {
-        console.log('사용자 데이터가 없습니다.');
+        alert('해당하는 계정이 존재하지 않습니다.');
       }
-
-      // 로그인 성공 시 routes.index로 이동
-      navigate(routes.index);
     } catch (error) {
       alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
       console.error(error);
