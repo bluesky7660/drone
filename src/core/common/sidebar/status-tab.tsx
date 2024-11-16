@@ -1,14 +1,13 @@
-import React, {  useContext } from 'react';
+import React from 'react'
 import ImageWithBasePath from '../imageWithBasePath'
 import { Link } from 'react-router-dom'
 import { all_routes } from '../../../feature-module/router/all_routes'
 import Scrollbars from 'react-custom-scrollbars-2'
-import { MemberContext } from '@context/memberContext'
+import { useMember } from '@hooks/useMember';
 
 const StatusTab = () => {
     const routes = all_routes;
-    const { state } = useContext(MemberContext)!;
-    const userName = state.mmNickName || state.mmName;
+    const {userName} = useMember();
   return (
     <div id="status" className="sidebar-content active slimscroll">
       <Scrollbars

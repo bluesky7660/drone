@@ -1,12 +1,43 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import ImageWithBasePath from '../../../core/common/imageWithBasePath'
 import { Link } from 'react-router-dom'
 import UploadFile from '../../../core/modals/upload-file-image'
 import NewStatus from '../../../core/modals/new-status'
 import ViewStatus from '../../../core/modals/view-status'
+import { Carousel } from 'react-bootstrap';
 
 const MyStatus = () => {
+  const [isPaused, setIsPaused] = useState(false);
+  const carouselRef = useRef(null);
+
+  // 클릭 시 슬라이드 멈추거나 재생
+  const togglePause = () => {
+    if (carouselRef.current) {
+      const carouselElement = carouselRef.current as any;
+      if (isPaused) {
+        // 슬라이드 시작
+        carouselElement.carousel('cycle');
+      } else {
+        // 슬라이드 멈추기
+        carouselElement.carousel('pause');
+      }
+    }
+    setIsPaused(!isPaused); // 상태 변경
+  };
   useEffect(() => {
+    if (carouselRef.current) {
+      const carouselElement = carouselRef.current;
+      // 부트스트랩 Carousel 초기화 (수동 제어)
+      const bsCarousel = new window.bootstrap.Carousel(carouselElement, {
+        ride: 'carousel',  // 자동 슬라이드 시작
+        interval: 3000,    // 슬라이드 전환 간격
+      });
+
+      // 컴포넌트 언마운트 시 Carousel 초기화 해제
+      return () => {
+        bsCarousel.dispose();
+      };
+    }
     document.querySelectorAll(".chat-user-list").forEach(function (element) {
       element.addEventListener("click", function () {
         if (window.innerWidth <= 992) {
@@ -62,8 +93,8 @@ const MyStatus = () => {
                 </div>
               </div>
               <div className="status-voice-group ">
-                <Link to="#" className="status-pause me-4">
-                  <i className="ti ti-player-pause" />
+                <Link to="#" onClick={togglePause} className="status-pause me-4">
+                      <i className={isPaused ? "ti ti-player-play" : "ti ti-player-pause"} />
                 </Link>
                 <Link to="#" className="text-white me-2 fs-24">
                   <i className="ti ti-volume" />
@@ -87,18 +118,23 @@ const MyStatus = () => {
             <div className="carousel-inner status_slider" role="listbox">
               <div id="target" className="carousel-item active">
                 <ImageWithBasePath src="assets/img/status/status-01.jpg" alt="Image" />
+                <p>1</p>
               </div>
               <div className="carousel-item">
                 <ImageWithBasePath src="assets/img/status/status-02.jpg" alt="Image" />
+                <p>2</p>
               </div>
               <div className="carousel-item">
                 <ImageWithBasePath src="assets/img/status/status-03.jpg" alt="Image" />
+                <p>3</p>
               </div>
               <div className="carousel-item">
                 <ImageWithBasePath src="assets/img/status/status-04.jpg" alt="Image" />
+                <p>4</p>
               </div>
               <div className="carousel-item">
                 <ImageWithBasePath src="assets/img/status/status-05.jpg" alt="Image" />
+                <p>5</p>
               </div>
             </div>
             <Link

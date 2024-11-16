@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { base_path } from "./environment";
 import { HelmetProvider } from 'react-helmet-async'
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css'
 import "../src/index.scss";
 import Store from "./core/data/redux/store";
@@ -17,6 +18,7 @@ import "../src/style/icon/ionic/ionicons.css";
 import "../src/style/icon/tabler-icons/webfont/tabler-icons.css";
 import "../src/style/icon/feather/css/iconfont.css";
 import "../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'; 
 import Mainapp from "./feature-module/router/router";
 import {MemberProvider} from '@context/memberContext';
 
