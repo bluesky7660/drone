@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, ReactNode } from 'react';
+import { Timestamp } from 'firebase/firestore';
 
 // 상태 인터페이스
 interface Member {
@@ -9,7 +10,7 @@ interface Member {
   mmNickName: string;   // 닉네임
   mmPassword: string;   // 비밀번호
   mmPhoneNum: string;   // 전화번호
-  mmRegDate: string;    // 등록일
+  mmRegDate: Timestamp | null;    // 등록일
 }
 
 // 리듀서에서 처리할 액션 타입 정의
@@ -26,7 +27,7 @@ const initialState: Member = {
   mmNickName: '',
   mmPassword: '',
   mmPhoneNum: '',
-  mmRegDate: '',
+  mmRegDate: null,
 };
 
 // 리듀서 함수

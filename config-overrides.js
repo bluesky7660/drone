@@ -9,6 +9,7 @@ module.exports = function override(config) {
     ...config.resolve.alias,
     '@': path.resolve(__dirname, 'src'),
     '@context': path.resolve(__dirname, 'src/context'),
+    '@hooks': path.resolve(__dirname, 'src/core/hooks'),
     '@router': path.resolve(__dirname, 'src/feature-module/router')
   };
 

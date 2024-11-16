@@ -1,11 +1,14 @@
-import React from 'react'
+import React, {  useContext } from 'react';
 import ImageWithBasePath from '../imageWithBasePath'
 import { Link } from 'react-router-dom'
 import { all_routes } from '../../../feature-module/router/all_routes'
 import Scrollbars from 'react-custom-scrollbars-2'
+import { MemberContext } from '@context/memberContext'
 
 const StatusTab = () => {
     const routes = all_routes;
+    const { state } = useContext(MemberContext)!;
+    const userName = state.mmNickName || state.mmName;
   return (
     <div id="status" className="sidebar-content active slimscroll">
       <Scrollbars
@@ -22,7 +25,7 @@ const StatusTab = () => {
       <div className="slimscroll">
       <div className="chat-search-header">
         <div className="header-title d-flex align-items-center justify-content-between">
-          <h4 className="mb-3">Status</h4>
+          <h4 className="mb-3">상태</h4>
           <div className="d-flex align-items-center mb-3">
             <Link
               to="#"
@@ -55,7 +58,7 @@ const StatusTab = () => {
         <div className="status-list">
           {/* Left Chat Title */}
           <div className="d-flex  mb-3">
-            <h5>My Status</h5>
+            <h5>내 상태</h5>
           </div>
           {/* /Left Chat Title */}
           <div className="chat-users-wrap">
@@ -70,7 +73,7 @@ const StatusTab = () => {
                 </div>
                 <div className="chat-user-info">
                   <div className="chat-user-msg">
-                    <h6>Rabino Desilva</h6>
+                    <h6>{userName}</h6>
                     <p>Today at 06:25 AM</p>
                   </div>
                 </div>

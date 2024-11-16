@@ -28,7 +28,8 @@
     "baseUrl": "src",  // src 폴더를 기준으로 경로 설정
     "paths": {
       "@":["/*"],
-      "@context/*": ["context/*"],  // @ 경로 별칭 설정 추가
+      "@context/*": ["context/*"],
+      "@hooks/*": ["core/hooks/*"],
       "@router/*": ["feature-module/router/*"]
     }
   },

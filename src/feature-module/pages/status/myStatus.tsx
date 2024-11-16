@@ -57,7 +57,7 @@ const MyStatus = () => {
                   />
                 </div>
                 <div className="user-online">
-                  <h5>My Status</h5>
+                  <h5>내 상태</h5>
                   <span>Today at 7:15 AM</span>
                 </div>
               </div>

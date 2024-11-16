@@ -3,9 +3,11 @@ import ImageWithBasePath from '../imageWithBasePath'
 import { Link } from 'react-router-dom'
 import { all_routes } from '../../../feature-module/router/all_routes'
 import Scrollbars from 'react-custom-scrollbars-2'
+import { useMember } from '@hooks/useMember';
 
 export const ProfileTab = () => {
     const routes = all_routes
+    const { state, userName, formattedPhone, formattedRegDate } = useMember();
   return (
     <>
         {/* Profile sidebar */}
@@ -24,7 +26,7 @@ export const ProfileTab = () => {
           <div className="slimscroll">
             <div className="chat-search-header">
               <div className="header-title d-flex align-items-center justify-content-between">
-                <h4 className="mb-3">Profile</h4>
+                <h4 className="mb-3">프로필</h4>
               </div>
             </div>
             {/* Profile */}
@@ -40,7 +42,7 @@ export const ProfileTab = () => {
                   </span>
                 </div>
                 <div>
-                  <h6 className="fs-16">Salom Katherine</h6>
+                  <h6 className="fs-16">{userName}</h6>
                   <div className="d-flex justify-content-center">
                     <span className="fs-14 text-center">Web Designer</span>
                   </div>
@@ -50,13 +52,13 @@ export const ProfileTab = () => {
             {/* /Profile */}
             <div className="sidebar-body chat-body">
               {/* Profile Info */}
-              <h5 className="mb-2">Profile Info</h5>
+              <h5 className="mb-2">프로필 정보</h5>
               <div className="card">
                 <div className="card-body">
                   <div className="d-flex profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
-                      <h6 className="fs-14">Name</h6>
-                      <p className="fs-16 ">Salom Katherine</p>
+                      <h6 className="fs-14">이름</h6>
+                      <p className="fs-16 ">{userName}</p>
                     </div>
                     <span>
                       <i className="ti ti-user-circle fs-16" />
@@ -64,8 +66,8 @@ export const ProfileTab = () => {
                   </div>
                   <div className="d-flex profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
-                      <h6 className="fs-14">Phone</h6>
-                      <p className="fs-16">514-245-98315</p>
+                      <h6 className="fs-14">전화번호</h6>
+                      <p className="fs-16">{formattedPhone}</p>
                     </div>
                     <span>
                       <i className="ti ti-phone-check fs-16" />
@@ -82,8 +84,8 @@ export const ProfileTab = () => {
                   </div>
                   <div className="d-flex profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
-                      <h6 className="fs-14">Email Address</h6>
-                      <p className="fs-16">info@example.com</p>
+                      <h6 className="fs-14">이메일 주소</h6>
+                      <p className="fs-16">{state.mmEmail}</p>
                     </div>
                     <span>
                       <i className="ti ti-mail-heart fs-16" />
@@ -91,8 +93,8 @@ export const ProfileTab = () => {
                   </div>
                   <div className="d-flex profile-list profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
-                      <h6 className="fs-14">Bio</h6>
-                      <p className="fs-16">Web Designer</p>
+                      <h6 className="fs-14">자기소개</h6>
+                      <p className="fs-16"></p>
                     </div>
                     <span>
                       <i className="ti ti-user-check fs-16" />
@@ -100,7 +102,7 @@ export const ProfileTab = () => {
                   </div>
                   <div className="d-flex profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
-                      <h6 className="fs-14">Location</h6>
+                      <h6 className="fs-14">지역</h6>
                       <p className="fs-16">Portland, USA</p>
                     </div>
                     <span>
@@ -109,8 +111,8 @@ export const ProfileTab = () => {
                   </div>
                   <div className="d-flex profile-list justify-content-between align-items-center">
                     <div>
-                      <h6 className="fs-14">Join Date</h6>
-                      <p className="fs-16">01 July 2024</p>
+                      <h6 className="fs-14">가입일</h6>
+                      <p className="fs-16">{formattedRegDate}</p>
                     </div>
                     <span>
                       <i className="ti ti-calendar-event fs-16" />
