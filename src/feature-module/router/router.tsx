@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Route, Routes, useLocation } from "react-router";
+import React, { useEffect, useState, useContext } from "react";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { adminAuth, adminRoutes, authRoutes, publicRoutes } from "./router.link";
 import Feature from "../feature";
 import AuthFeature from "../authFeature";
@@ -8,32 +8,16 @@ import { Helmet } from "react-helmet-async";
 import AdminFeature from "../adminFeature";
 import AdminAuthFeature from "../adminAuthFeature";
 import AdminLogin from "../admin/authentication/login";
-
 import PrivateRoute from "@router/PrivateRoute";
+import cookie from "cookie";
+import { MemberContext, MemberContextType } from '@context/memberContext';
 
 const Mainapp: React.FC = () => {
   const location = useLocation();
-  console.log("지금:"+document.title);
+  const navigate = useNavigate();
+  const { dispatch } = useContext<MemberContextType>(MemberContext); // MemberContext 타입 지정
 
-  // Find the current route in either public or auth routes
-  const currentRoute = publicRoutes.find(route => route.path === location.pathname) || 
-                       authRoutes.find(route => route.path === location.pathname);
-                       
-    if (currentRoute) {
-    console.log("currentRoute:", currentRoute.title);
-  } else {
-    console.log("No route found for this path");
-  }
-  // Construct the full title
-  const fullTitle = currentRoute?.title 
-    ? `${currentRoute.title} - DreamsChat`
-    : "DreamsChat";
-  
-  useEffect(() => {
-    document.title = fullTitle;
-    
-  }, [fullTitle]);
-  const [styleLoaded, setStyleLoaded] = useState(false);
+  const [styleLoaded, setStyleLoaded] = useState<boolean>(false); // 타입 지정
 
   useEffect(() => {
     setStyleLoaded(false); // Reset styleLoaded when pathname changes
@@ -48,9 +32,47 @@ const Mainapp: React.FC = () => {
         .catch((err) => console.error("Main style load error: ", err));
     }
   }, [location.pathname]);
+
+  useEffect(() => {
+    const checkSessionTimeout = () => {
+      const cookies = document.cookie.split(';');
+      const userCookie = cookies.find(cookie => cookie.includes('user'));
+      
+      if (!userCookie) return;
+      
+      const currentTime = new Date().getTime();
+      const userData = JSON.parse(userCookie.split('=')[1]);
+      
+      if (userData) {
+        const lastActivity = userData.lastActivity || currentTime;
+        const sessionTimeout = 30 * 60 * 1000; // 30분 = 30 * 60 * 1000ms
+        
+        if (currentTime - lastActivity > sessionTimeout) {
+          alert('세션이 만료되었습니다. 다시 로그인하세요.');
+          document.cookie = cookie.serialize('user', '', { maxAge: -1, path: '/' });
+          navigate('/signin'); // 로그인 페이지로 이동
+        }
+      }
+    };
+
+    const interval = setInterval(checkSessionTimeout, 5 * 60 * 1000); // 5분마다 세션 체크
+
+    return () => clearInterval(interval); // 클린업 함수
+  }, [navigate]);
+
+  const currentRoute = publicRoutes.find(route => route.path === location.pathname) || 
+                       authRoutes.find(route => route.path === location.pathname);
+                       
+  const fullTitle = currentRoute?.title ? `${currentRoute.title} - DreamsChat` : "DreamsChat";
+  
+  useEffect(() => {
+    document.title = fullTitle;
+  }, [fullTitle]);
+
   if (!styleLoaded) {
-    return null; // You could show a loading spinner here if necessary
+    return null; // 스타일 로딩 중에는 아무것도 렌더링하지 않음
   }
+
   return (
     <>
       <Helmet>
@@ -58,11 +80,6 @@ const Mainapp: React.FC = () => {
       </Helmet>
       <Routes>
         <Route path="/" element={<Signin />} />
-        {/* <Route element={<Feature />}>
-          {publicRoutes.map((route, idx) => (
-            <Route path={route.path} element={route.element} key={idx} />
-          ))}
-        </Route> */}
         <Route element={<PrivateRoute element={<Feature />} />}>
           {publicRoutes.map((route, idx) => (
             <Route path={route.path} element={route.element} key={idx} />
@@ -78,7 +95,7 @@ const Mainapp: React.FC = () => {
             <Route path={route.path} element={route.element} key={idx} />
           ))}
         </Route>
-        <Route  element={<AdminAuthFeature />}>
+        <Route element={<AdminAuthFeature />}>
           {adminAuth.map((route, idx) => (
             <Route path={route.path} element={route.element} key={idx} />
           ))}

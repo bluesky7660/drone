@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import ImageWithBasePath from "../imageWithBasePath";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -6,6 +6,8 @@ import { all_routes } from "../../../feature-module/router/all_routes";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { Tooltip } from "antd";
 import { setDark } from "../../data/redux/commonSlice";
+import { getAuth, signOut } from "firebase/auth";
+import { MemberContext } from "@context/memberContext";
 
 const Sidebar = () => {
   const routes = all_routes;
@@ -13,6 +15,8 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode"));
+  const { dispatch: memberDispatch } = useContext(MemberContext);
+
   const LayoutDark = () => {
     if (darkMode === "enabled") {
       localStorage.setItem("darkMode", "enabled");
@@ -28,6 +32,19 @@ const Sidebar = () => {
     setDarkMode(localStorage.getItem("darkMode"));
     LayoutDark();
   }, [darkMode]);
+
+  // 로그아웃 처리 함수
+  const handleLogout = async () => {
+    try {
+      const auth = getAuth();
+      await signOut(auth); // Firebase 로그아웃 처리
+      memberDispatch({ type: 'LOGOUT' }); // 상태 초기화 (MemberContext)
+      navigate('/signin'); // 로그인 페이지로 리다이렉트
+      console.log("Logged out from Firebase and reset state!");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <>
@@ -208,7 +225,7 @@ const Sidebar = () => {
                     />
                   </Link>
                   <div className="dropdown-menu dropdown-menu-end p-3">
-                    <Link to={routes.signin} className="dropdown-item">
+                    <Link to="#" className="dropdown-item" onClick={handleLogout}>
                       <i className="ti ti-logout-2 me-2" />
                       Logout{" "}
                     </Link>

@@ -42,6 +42,11 @@ const memberReducer = (state: Member, action: MemberAction): Member => {
   }
 };
 
+interface MemberContextType {
+  state: Member;
+  dispatch: React.Dispatch<MemberAction>;
+}
+
 // Context 생성
 const MemberContext = createContext<{
   state: Member;
@@ -66,4 +71,4 @@ const MemberProvider: React.FC<MemberProviderProps> = ({ children }) => {
   );
 };
 
-export { MemberProvider, MemberContext };
+export { MemberProvider, MemberContext, MemberContextType };
