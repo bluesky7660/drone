@@ -1,5 +1,6 @@
-import React, { createContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useReducer, ReactNode, useEffect } from 'react';
 import { Timestamp } from 'firebase/firestore';
+import Cookies from 'js-cookie';
 
 // 상태 인터페이스
 interface Member {
@@ -63,6 +64,21 @@ interface MemberProviderProps {
 
 const MemberProvider: React.FC<MemberProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(memberReducer, initialState);
+
+  useEffect(() => {
+    const userData = Cookies.get('user');
+    if (userData) {
+      dispatch({ type: 'SET_MEMBER', payload: JSON.parse(userData) });
+    }
+
+    // 30분 동안 아무 활동이 없으면 로그아웃 처리
+    const timeout = setTimeout(() => {
+      Cookies.remove('user');
+      dispatch({ type: 'LOGOUT' });
+    }, 30 * 60 * 1000); // 30분
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <MemberContext.Provider value={{ state, dispatch }}>

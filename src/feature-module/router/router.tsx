@@ -9,7 +9,7 @@ import AdminFeature from "../adminFeature";
 import AdminAuthFeature from "../adminAuthFeature";
 import AdminLogin from "../admin/authentication/login";
 import PrivateRoute from "@router/PrivateRoute";
-import cookie from "cookie";
+import Cookies from "js-cookie";
 import { MemberContext, MemberContextType } from '@context/memberContext';
 
 const Mainapp: React.FC = () => {
@@ -35,13 +35,12 @@ const Mainapp: React.FC = () => {
 
   useEffect(() => {
     const checkSessionTimeout = () => {
-      const cookies = document.cookie.split(';');
-      const userCookie = cookies.find(cookie => cookie.includes('user'));
-      
+      const userCookie = Cookies.get('user'); // js-cookie로 'user' 쿠키 가져오기
+
       if (!userCookie) return;
-      
+
       const currentTime = new Date().getTime();
-      const userData = JSON.parse(userCookie.split('=')[1]);
+      const userData = JSON.parse(userCookie);
       
       if (userData) {
         const lastActivity = userData.lastActivity || currentTime;
@@ -49,7 +48,7 @@ const Mainapp: React.FC = () => {
         
         if (currentTime - lastActivity > sessionTimeout) {
           alert('세션이 만료되었습니다. 다시 로그인하세요.');
-          document.cookie = cookie.serialize('user', '', { maxAge: -1, path: '/' });
+          Cookies.remove('user'); // 세션 만료 시 쿠키 삭제
           navigate('/signin'); // 로그인 페이지로 이동
         }
       }

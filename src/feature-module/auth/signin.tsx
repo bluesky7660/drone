@@ -7,7 +7,7 @@ import { MemberContext } from '@context/memberContext';
 import { firebaseDB, auth } from '../../firebase/firebase'; // Firebase auth 가져오기
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import cookie from 'cookie';
+import Cookies from 'js-cookie';
 
 const Signin = () => {
   const routes = all_routes;
@@ -61,11 +61,8 @@ const Signin = () => {
         console.log('memberData 데이터:', memberData);
         dispatch({ type: 'SET_MEMBER', payload: memberData });
 
-        // 쿠키에 로그인 정보 저장 (로그인 후 30일 동안 유지)
-        document.cookie = cookie.serialize('user', JSON.stringify(memberData), {
-          maxAge: 60 * 30,  // 30일 동안 쿠키 유지
-          path: '/',
-        });
+        // 쿠키에 로그인 정보 저장
+        Cookies.set('user', JSON.stringify(memberData), { expires: 1 / 48, path: '/' });
 
         // 로그인 성공 시 대시보드로 이동
         navigate(routes.index);

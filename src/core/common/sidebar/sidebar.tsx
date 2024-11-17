@@ -3,11 +3,12 @@ import ImageWithBasePath from "../imageWithBasePath";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { all_routes } from "../../../feature-module/router/all_routes";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { Tooltip } from "antd";
 import { setDark } from "../../data/redux/commonSlice";
 import { getAuth, signOut } from "firebase/auth";
 import { MemberContext } from "@context/memberContext";
+import { auth } from '../../../firebase/firebase';
+import Cookies from 'js-cookie';
 
 const Sidebar = () => {
   const routes = all_routes;
@@ -36,11 +37,17 @@ const Sidebar = () => {
   // 로그아웃 처리 함수
   const handleLogout = async () => {
     try {
-      const auth = getAuth();
-      await signOut(auth); // Firebase 로그아웃 처리
-      memberDispatch({ type: 'LOGOUT' }); // 상태 초기화 (MemberContext)
-      navigate('/signin'); // 로그인 페이지로 리다이렉트
-      console.log("Logged out from Firebase and reset state!");
+      // Firebase 로그아웃 처리
+      await signOut(auth);
+
+      // 상태 초기화 (MemberContext)
+      dispatch({ type: 'LOGOUT' });
+
+      // 쿠키 삭제
+      Cookies.remove('user');
+
+      // 로그인 페이지로 리다이렉트
+      navigate(routes.signin);
     } catch (error) {
       console.error("Logout error:", error);
     }

@@ -8,6 +8,7 @@ module.exports = function override(config) {
   config.resolve.alias = {
     ...config.resolve.alias,
     '@': path.resolve(__dirname, 'src'),
+    '@firebaseApi': path.resolve(__dirname, 'src/firebase'),
     '@context': path.resolve(__dirname, 'src/context'),
     '@hooks': path.resolve(__dirname, 'src/core/hooks'),
     '@router': path.resolve(__dirname, 'src/feature-module/router')
