@@ -9,14 +9,17 @@ import {Tooltip} from "antd";
 import ForwardMessage from "../../../core/modals/forward-message";
 import MessageDelete from "../../../core/modals/message-delete";
 import Scrollbars from 'react-custom-scrollbars-2'
-import { all_routes } from "../../router/all_routes";
+import { useParams } from 'react-router-dom';
 
-const Chat = () => {
+const Chat: React.FC = () => {
   const [open1, setOpen1] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showReply, setShowReply] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showEmoji, setShowEmoji] = useState<Record<number, boolean>>({});
+  const { chatId } = useParams<{ chatId: string }>(); // chatId를 받아옴
+
+  console.log("Chat ID:", chatId); // chatId가 잘 받아왔는지 확인
   const toggleEmoji = (groupId: number) => {
     setShowEmoji((prev) => ({
       ...prev,
@@ -559,45 +562,6 @@ const Chat = () => {
                 </Link>
               </div>
               <div className="form-wrap">
-                {/*<div
-                    className={`chats reply-chat ${
-                      showReply ? "d-flex" : "d-none"
-                    }`}
-                  >
-                     <div className="chat-avatar">
-                      <ImageWithBasePath
-                        src="assets/img/profiles/avatar-06.jpg"
-                        className="rounded-circle"
-                        alt="image"
-                      />
-                    </div>
-                    <div className="chat-content">
-                      <div className="chat-profile-name">
-                        <h6>
-                          Edward Lietz
-                          <i className="ti ti-circle-filled fs-7 mx-2" />
-                          <span className="chat-time">02:39 PM</span>
-                          <span className="msg-read success">
-                            <i className="ti ti-checks" />
-                          </span>
-                        </h6>
-                      </div>
-                      <div className="chat-info">
-                        <div className="message-content">
-                          <div className="message-reply reply-content">
-                            Thank you for your support
-                          </div>
-                        </div>
-                      </div>
-                    </div> 
-                    <Link
-                      to="#"
-                      className="close-replay"
-                      onClick={() => setShowReply(false)}
-                    >
-                      <i className="ti ti-x" />
-                    </Link>
-                </div>*/}
                 <input
                   type="text"
                   className="form-control"

@@ -8,6 +8,7 @@ import { firebaseDB, auth } from '../../firebase/firebase'; // Firebase auth 가
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import Cookies from 'js-cookie';
+import { uid } from 'chart.js/dist/helpers/helpers.core';
 
 const Signin = () => {
   const routes = all_routes;
@@ -49,6 +50,7 @@ const Signin = () => {
         
         // 로그인 후 받아온 회원 정보 상태에 저장
         const memberData = {
+          uid:user.uid,
           mmBirthDate: userData.mmBirthDate,
           mmDelNy: userData.mmDelNy,
           mmEmail: userData.mmEmail,

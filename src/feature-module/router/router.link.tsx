@@ -133,6 +133,12 @@ export const publicRoutes = [
     title:'Chat'
   },
   {
+    path: `${route.chat}/:chatId`, // 동적 경로 추가 /chat/:chatId
+    element: <Chat />, // 같은 Chat 컴포넌트로 처리
+    route: Route,
+    title: 'Chat',
+  },
+  {
     path: route.groupChat,
     element: <GroupChat />,
     route: Route,

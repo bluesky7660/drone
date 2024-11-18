@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 
 // 상태 인터페이스
 interface Member {
+  uid: string;
   mmBirthDate: string;  // 생년월일
   mmDelNy: boolean;     // 삭제 여부
   mmEmail: string;      // 이메일
@@ -21,6 +22,7 @@ type MemberAction =
 
 // 초기 상태
 const initialState: Member = {
+  uid: '',
   mmBirthDate: '',
   mmDelNy: false,
   mmEmail: '',
