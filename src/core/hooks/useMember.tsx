@@ -14,12 +14,12 @@ export const useMember = () => {
 
   const formatRegDate = (regDate: Timestamp | Date | null) => {
     if (regDate instanceof Timestamp) {
-      return regDate.toDate().toLocaleString(); // Timestamp 객체일 경우 Date로 변환 후 포맷
+      return regDate.toDate().toLocaleString();
     }
     if (regDate instanceof Date) {
-      return regDate.toLocaleString(); // 이미 Date 객체일 경우 바로 포맷
+      return regDate.toLocaleString();
     }
-    return '등록일 없음'; // mmRegDate가 null인 경우 처리
+    return '등록일 없음';
   };
 
   const formattedRegDate = formatRegDate(state.mmRegDate);

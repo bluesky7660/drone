@@ -439,3 +439,25 @@ li a span.version {
 [data-layout-mode=dark] .sidebar .sidebar-menu>ul>li ul li a {
   color: #d8dfeb;
 }
+label.contact-user{
+  cursor: pointer;
+  border: 1px solid rgba($color: #000000, $alpha: .2);
+}
+.chat div.chat-footer{
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right:0;
+}
+.chat .chat-footer form.footer-form{
+  position: static;
+}
+.chat-messages-area{
+  height: 100%;
+}
+.swiper .swiper-initialized{
+  width: 100%;
+}
+// .chat .chat-body .messages{
+//   height: 100%;
+// }

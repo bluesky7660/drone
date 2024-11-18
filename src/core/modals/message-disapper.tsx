@@ -5,7 +5,7 @@ const MessageDisapper = () => {
   return (
     <>
   {/* Disapperaing Message */}
-  <div className="modal fade" id="msg-disapper">
+  <div className="modal fade" id="disappearing-messages">
     <div className="modal-dialog modal-dialog-centered">
       <div className="modal-content">
         <div className="modal-header">

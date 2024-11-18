@@ -36,7 +36,7 @@ const ForwardMessage = () => {
             </div>
             <h6 className="mb-3 fw-medium fs-16">Recent Chats</h6>
             <div className="contact-scroll contact-select mb-3">
-              <div className="contact-user d-flex align-items-center justify-content-between">
+              <label className="contact-user d-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center">
                   <div className="avatar avatar-lg">
                     <ImageWithBasePath
@@ -57,8 +57,8 @@ const ForwardMessage = () => {
                     name="contact"
                   />
                 </div>
-              </div>
-              <div className="contact-user d-flex align-items-center justify-content-between">
+              </label>
+              <label className="contact-user d-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center">
                   <div className="avatar avatar-lg">
                     <ImageWithBasePath
@@ -79,8 +79,8 @@ const ForwardMessage = () => {
                     name="contact"
                   />
                 </div>
-              </div>
-              <div className="contact-user d-flex align-items-center justify-content-between">
+              </label>
+              <label className="contact-user d-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center">
                   <div className="avatar avatar-lg">
                     <ImageWithBasePath
@@ -101,8 +101,8 @@ const ForwardMessage = () => {
                     name="contact"
                   />
                 </div>
-              </div>
-              <div className="contact-user d-flex align-items-center justify-content-between">
+              </label>
+              <label className="contact-user d-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center">
                   <div className="avatar avatar-lg">
                     <ImageWithBasePath
@@ -123,7 +123,73 @@ const ForwardMessage = () => {
                     name="contact"
                   />
                 </div>
-              </div>
+              </label>
+              <label className="contact-user d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center">
+                  <div className="avatar avatar-lg">
+                    <ImageWithBasePath
+                      src="assets/img/profiles/avatar-04.jpg"
+                      className="rounded-circle"
+                      alt="image"
+                    />
+                  </div>
+                  <div className="ms-2">
+                    <h6>Carla Jenkins</h6>
+                    <p>Business Analyst</p>
+                  </div>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="contact"
+                  />
+                </div>
+              </label>
+              <label className="contact-user d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center">
+                  <div className="avatar avatar-lg">
+                    <ImageWithBasePath
+                      src="assets/img/profiles/avatar-04.jpg"
+                      className="rounded-circle"
+                      alt="image"
+                    />
+                  </div>
+                  <div className="ms-2">
+                    <h6>Carla Jenkins</h6>
+                    <p>Business Analyst</p>
+                  </div>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="contact"
+                  />
+                </div>
+              </label>
+              <label className="contact-user d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center">
+                  <div className="avatar avatar-lg">
+                    <ImageWithBasePath
+                      src="assets/img/profiles/avatar-04.jpg"
+                      className="rounded-circle"
+                      alt="image"
+                    />
+                  </div>
+                  <div className="ms-2">
+                    <h6>Carla Jenkins</h6>
+                    <p>Business Analyst</p>
+                  </div>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="contact"
+                  />
+                </div>
+              </label>
             </div>
             <div className="row g-3">
               <div className="col-6">

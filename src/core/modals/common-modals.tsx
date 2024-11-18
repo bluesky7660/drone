@@ -15,6 +15,7 @@ import BlockUser from './block-user'
 import ContactDetails from './contact-details'
 import EditContact from './edit-contact'
 import InviteModal from './invite-modal'
+import MuteNotification from './mute-notification'
 
 const CommonModals = () => {
   return (
@@ -35,6 +36,7 @@ const CommonModals = () => {
     <ContactDetails/>
     <EditContact/>
     <InviteModal/>
+    <MuteNotification/>
     </>
   )
 }
