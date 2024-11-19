@@ -8,7 +8,6 @@ const Message = ({
   createdAt = null,
   uid = "",
   text = "",
-  displayName = "",
   photoURL = "",
   isRead = false,
 }) => {

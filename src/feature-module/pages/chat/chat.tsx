@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import ImageWithBasePath from "../../../core/common/imageWithBasePath";
 import Lightbox from "yet-another-react-lightbox";
@@ -10,14 +10,30 @@ import ForwardMessage from "../../../core/modals/forward-message";
 import MessageDelete from "../../../core/modals/message-delete";
 import Scrollbars from 'react-custom-scrollbars-2'
 import { useParams } from 'react-router-dom';
+import { MemberContext } from '@context/memberContext';
+import { firebaseDB } from "@firebaseApi/firebase";
+import { getDoc ,getDocs, doc, collection, addDoc, query, orderBy, Timestamp } from 'firebase/firestore';
+import MessageInput from './MessageInput';
+
+
+interface Message {
+  createdAt: Timestamp;
+  senderId: string;
+  text: string;
+  isRead: boolean;
+}
 
 const Chat: React.FC = () => {
-  const [open1, setOpen1] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [showReply, setShowReply] = useState(false);
+  // const [open1, setOpen1] = useState(false);
+  // const [copied, setCopied] = useState(false);
+  // const [showReply, setShowReply] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState<string>('');
   const [showSearch, setShowSearch] = useState(false);
-  const [showEmoji, setShowEmoji] = useState<Record<number, boolean>>({});
+  const [showEmoji, setShowEmoji] =  useState<Record<number, boolean>>({});
   const { chatId } = useParams<{ chatId: string }>(); // chatId를 받아옴
+  const {state} = useContext(MemberContext);
+  const [otherUser, setOtherUser] = useState('');
 
   console.log("Chat ID:", chatId); // chatId가 잘 받아왔는지 확인
   const toggleEmoji = (groupId: number) => {
@@ -26,6 +42,7 @@ const Chat: React.FC = () => {
       [groupId]: !prev[groupId], // Toggle the state for this specific group
     }));
   };
+  
   // const handleCopy = () => {
   //   // 클립보드에 메시지 텍스트를 복사
   //   navigator.clipboard.writeText(message).then(() => {
@@ -33,6 +50,93 @@ const Chat: React.FC = () => {
   //     setTimeout(() => setCopied(false), 2000); // 2초 후 복사 상태 초기화
   //   });
   // };
+  const fetchChatUsrData = async () => {
+    if (!chatId) {
+      console.error("chatId가 제공되지 않았습니다.");
+      return;
+    }
+    try {
+      const chatDocRef  = doc(firebaseDB, "chatRooms", chatId);
+      const chatDoc = await getDoc(chatDocRef);
+      if (!chatDoc.exists()) {
+        console.error("채팅방을 찾을 수 없습니다.");
+        return;
+      }
+      const chatData = chatDoc.data();
+      const participants = chatData?.participants || [];
+
+      // 2. 상대방 ID 가져오기
+      const otherUserId = participants.find((uid: string) => uid !== state.uid);
+      console.log("otherUserId:",otherUserId);
+      if (!otherUserId) {
+        console.error("상대방 정보를 찾을 수 없습니다.");
+        return;
+      }
+
+      // 3. 상대방 정보 가져오기
+      const userDocRef = doc(firebaseDB, "member", otherUserId);
+      const userDoc = await getDoc(userDocRef);
+      console.log("userDoc.data():",userDoc.data());
+      if (userDoc.exists()) {
+        console.log("userDoc.data():",userDoc.data());
+        const userData = userDoc.data();
+        setOtherUser({ uid: userDoc.id, ...userDoc.data() });
+        console.log("otherUser:",otherUser);
+      }
+      console.log("userDoc.data 없음");
+      
+    } catch (error) {
+      console.error("상대방데이터를 가져오는 중 오류 발생:", error);
+    }
+  }
+  const fetchChatData = async () => {
+    if (!chatId) {
+      console.error("chatId가 제공되지 않았습니다.");
+      return;
+    }
+    try {
+      const chatRef = collection(firebaseDB, 'chatRooms', chatId, 'messages');
+      const chatq = query(chatRef, orderBy('createdAt', 'asc'));
+      const querySnapshot = await getDocs(chatq);
+      const messagesData: Message[] = [];
+      querySnapshot.forEach((doc) => {
+        messagesData.push(doc.data() as Message);
+      });
+      setMessages(messagesData);
+    } catch (error) {
+      console.error("채팅데이터를 가져오는 중 오류 발생:", error);
+    }
+  }
+  useEffect(() => {
+    console.log("hi");
+    
+    if (chatId) {
+      fetchChatUsrData();
+    }
+  }, [chatId, state.uid]);
+
+  const handleSendMessage = async (message: string) => {
+    if (!chatId) {
+      console.error("chatId가 제공되지 않았습니다.");
+      return;
+    }
+    if (!message.trim()) return; // 빈 메시지 방지
+    try {
+      const messageRef = collection(firebaseDB, 'chatRooms', chatId, 'messages');
+      const newMessage = {
+        createdAt: Timestamp.now(),
+        senderId: state.uid, // 현재 사용자 ID
+        text: message,
+        isRead: false,
+      };
+
+      await addDoc(messageRef, newMessage); // Firestore에 메시지 추가
+      setNewMessage(''); // 입력창 비우기
+      fetchChatData(); // 새로운 메시지 가져오기
+    } catch (error) {
+      console.error('메시지 전송 중 오류 발생:', error);
+    }
+  };
   const toggleSearch = () => {
     setShowSearch(!showSearch);
   };
@@ -80,7 +184,7 @@ const Chat: React.FC = () => {
                 />
               </div>
               <div className="ms-2 overflow-hidden">
-                <h6>친구</h6>{/* 채팅유저이름 */}
+                <h6>{otherUser.mmNickName||otherUser.mmName}</h6>{/* 채팅유저이름 */}
                 <span className="last-seen">Online</span>{/* 채팅유저 상태 */}
               </div>
             </div>
@@ -553,124 +657,7 @@ const Chat: React.FC = () => {
             </div>
           </Scrollbars>
         </div>
-        <div className="chat-footer">
-          <form className="footer-form">
-            <div className="chat-footer-wrap">
-              <div className="form-item">
-                <Link to="#" className="action-circle">
-                  <i className="ti ti-microphone" />
-                </Link>
-              </div>
-              <div className="form-wrap">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Type Your Message"
-                />
-              </div>
-              <div className="form-item emoj-action-foot">
-                <Link to="#" className="action-circle" onClick={() => toggleEmoji(17)}>
-                  <i className="ti ti-mood-smile" />
-                </Link>
-                <div className="emoj-group-list-foot down-emoji-circle" onClick={() => toggleEmoji(17)} style={{ display: showEmoji[17] ? 'block' : 'none' }}>
-                  <ul>
-                    <li>
-                      <Link to="#">
-                        <ImageWithBasePath
-                          src="assets/img/icons/emonji-02.svg"
-                          alt="Icon"
-                        />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <ImageWithBasePath
-                          src="assets/img/icons/emonji-05.svg"
-                          alt="Icon"
-                        />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <ImageWithBasePath
-                          src="assets/img/icons/emonji-06.svg"
-                          alt="Icon"
-                        />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <ImageWithBasePath
-                          src="assets/img/icons/emonji-07.svg"
-                          alt="Icon"
-                        />
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="#">
-                        <ImageWithBasePath
-                          src="assets/img/icons/emonji-08.svg"
-                          alt="Icon"
-                        />
-                      </Link>
-                    </li>
-                    <li className="add-emoj">
-                      <Link to="#">
-                        <i className="ti ti-plus" />
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="form-item position-relative d-flex align-items-center justify-content-center ">
-                <Link
-                  to="#"
-                  className="action-circle file-action position-absolute"
-                >
-                  <i className="ti ti-folder" />
-                </Link>
-                {/* <input
-                  type="file"
-                  className="open-file position-relative"
-                  name="files"
-                  id="files"
-                /> */}
-              </div>
-              <div className="form-item">
-                <Link to="#" data-bs-toggle="dropdown">
-                  <i className="ti ti-dots-vertical" />
-                </Link>
-                <div className="dropdown-menu dropdown-menu-end p-3">
-                  <Link to="#" className="dropdown-item">
-                    <i className="ti ti-camera-selfie me-2" />
-                    Camera
-                  </Link>
-                  <Link to="#" className="dropdown-item">
-                    <i className="ti ti-photo-up me-2" />
-                    Gallery
-                  </Link>
-                  <Link to="#" className="dropdown-item">
-                    <i className="ti ti-music me-2" />
-                    Audio
-                  </Link>
-                  <Link to="#" className="dropdown-item">
-                    <i className="ti ti-map-pin-share me-2" />
-                    Location
-                  </Link>
-                  <Link to="#" className="dropdown-item">
-                    <i className="ti ti-user-check me-2" />
-                    Contact
-                  </Link>
-                </div>
-              </div>
-              <div className="form-btn">
-                <button className="btn btn-primary" type="submit">
-                  <i className="ti ti-send" />
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+        <MessageInput onSendMessage={sendMessage} />
       </div>
       {/* /Chat */}
       <ContactInfo/>
