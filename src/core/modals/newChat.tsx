@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { firebaseDB, auth } from '@firebaseApi/firebase';  // Firebase 초기화된 파일
 import { onAuthStateChanged } from 'firebase/auth';
@@ -9,7 +9,7 @@ const NewChat = () => {
   const [contacts, setContacts] = useState<any[]>([]);  // 연락처 목록
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);  // 현재 로그인된 유저 UID
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);  // 선택된 유저들 UID
-
+  const navigate = useNavigate();
   // 현재 로그인된 유저 UID 가져오기
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -55,37 +55,43 @@ const NewChat = () => {
 
   // 1:1 채팅방 생성
   const createChatRoom = async () => {
+    console.log("생성준비중");
+    console.log("currentUserId:",currentUserId);
     if (!currentUserId || selectedContacts.length === 0) return;
   
     const partnerId = selectedContacts[0]; // 1:1 채팅방이므로 첫 번째 선택된 사람만 사용
-  
+    console.log("partnerId:",partnerId);
     // participants 배열에서 현재 사용자와 파트너가 둘 다 포함된 채팅방을 찾는 쿼리
     const chatRoomQuery = query(
       collection(firebaseDB, 'chatRooms'),
-      where('participants', 'array-contains-any', [currentUserId, partnerId])
+      // where('participants', 'array-contains-any', [currentUserId, partnerId]), 
+      where('participants', '==', currentUserId), 
+      where('participants', 'array-contains', partnerId)     
     );
-  
     const querySnapshot = await getDocs(chatRoomQuery);
+    console.log("querySnapshot:",querySnapshot.empty);
     if (querySnapshot.empty) {
+      console.log("방생성중");
       // 채팅방이 없으면 새로 생성
-      await addDoc(collection(firebaseDB, 'chatRooms'), {
+      const docRef = await addDoc(collection(firebaseDB, 'chatRooms'), {
         participants: [currentUserId, partnerId],
         messages: [],
         createdAt: new Date(),
       });
+      navigate(`/chat/${docRef.id}`); 
     }
-
     // 여기에 채팅방 페이지로 리다이렉트 할 수 있습니다 (예: react-router-dom 사용)
+    setSelectedContacts([]);
   };
 
   return (
     <>
       {/* New Chat Modal */}
-      <div className="modal fade" id="new-chat">
+      <div className="modal fade" id="new-chat" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h4 className="modal-title">New Chat</h4>
+              <h4 className="modal-title">새로운 채팅</h4>
               <button
                 type="button"
                 className="btn-close"
@@ -109,7 +115,7 @@ const NewChat = () => {
                     </Link>
                   </div>
                 </div>
-                <h6 className="mb-3 fw-medium fs-16">Contacts</h6>
+                <h6 className="mb-3 fw-medium fs-16">연락처</h6>
                 <div className="contact-scroll contact-select mb-3">
                   {contacts.map((contact) => (
                     // 현재 로그인한 유저 제외하고 목록에 보여주기
@@ -151,7 +157,7 @@ const NewChat = () => {
                       data-bs-dismiss="modal"
                       aria-label="Close"
                     >
-                      Cancel
+                      취소
                     </Link>
                   </div>
                   <div className="col-6">
@@ -161,7 +167,7 @@ const NewChat = () => {
                       onClick={createChatRoom}
                       data-bs-dismiss="modal"
                     >
-                      Start Chat
+                      채팅 시작
                     </button>
                   </div>
                 </div>

@@ -11,7 +11,7 @@ import MessageDelete from "../../../core/modals/message-delete";
 import { useParams } from 'react-router-dom';
 import { MemberContext } from '@context/memberContext';
 import { firebaseDB } from "@firebaseApi/firebase";
-import { getDoc ,getDocs, doc, collection, addDoc, onSnapshot, query, orderBy, Timestamp } from 'firebase/firestore';
+import { getDoc ,getDocs, doc, collection, addDoc, onSnapshot, query, orderBy, Timestamp, updateDoc } from 'firebase/firestore';
 import MessageInput from './MessageInput';
 import MessageList from './MessageList';
 
@@ -64,7 +64,23 @@ const Chat: React.FC = () => {
       console.error("상대방 데이터를 가져오는 중 오류 발생:", error);
     }
   };
-
+  /*usr */
+  const fetchSenderName = async (senderId: string) => {
+    try {
+      const senderRef = doc(firebaseDB, "member", senderId); // 'member' 컬렉션에서 senderId로 문서 참조
+      const senderDoc = await getDoc(senderRef);
+  
+      // senderName 설정
+      const senderName = senderDoc.exists() 
+        ? senderDoc.data()?.mmNickName || senderDoc.data()?.mmName 
+        : null;
+  
+      return senderName; // 이름 반환
+    } catch (error) {
+      console.error("Sender name fetch error:", error);
+      return null;
+    }
+  };
   /**
    * 메시지 로드 및 실시간 업데이트
    */
@@ -79,26 +95,29 @@ const Chat: React.FC = () => {
 
       for (const doc of snapshot.docs) {
         const messageData = doc.data() as Message;
+        console.log("senderid:",messageData.senderId);
+        const senderName = await fetchSenderName(messageData.senderId);
+        console.log("senderName:",senderName);
+        // try {
+          
+        //     const senderRef = doc(firebaseDB, "member", messageData.senderId);
+        //     const senderDoc = await getDoc(senderRef);
+        //     senderName = senderDoc.exists() ? senderDoc.data()?.mmName || null : null;
+          
+        // } catch (error) {
+        //   console.error(`Sender 데이터를 가져오는 중 오류 발생: ${error}`);
+        // }
+        
 
-        // Firestore에서 senderName 동적으로 로드
-        let senderName: string | null = null;
-        if (messageData.senderId) {
-          try {
-            const senderRef = doc(firebaseDB, "member", messageData.senderId);
-            const senderDoc = await getDoc(senderRef);
-            senderName = senderDoc.exists() ? senderDoc.data()?.mmName || null : null;
-          } catch (error) {
-            console.error(`Sender 데이터를 가져오는 중 오류 발생: ${error}`);
-          }
-        }
-
+        console.log("senderName:",otherUser?.mmNickName+" || "+otherUser?.mmName);
         messagesData.push({
-          id: doc.id,
           ...messageData,
           senderName,
         });
+        console.log("id:",messageData.id);
       }
       setMessages(messagesData);
+      
     });
   };
 
@@ -118,6 +137,13 @@ const Chat: React.FC = () => {
       };
 
       await addDoc(messageRef, newMessage);
+
+      const chatRoomRef = doc(firebaseDB, "chatRooms", chatId);
+
+      await updateDoc(chatRoomRef, {
+        lastMessage: message,
+        lastMessageTime: Timestamp.now(),
+      });
       setNewMessage("");
     } catch (error) {
       console.error("메시지 전송 중 오류 발생:", error);

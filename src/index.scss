@@ -458,9 +458,27 @@ label.contact-user{
 .swiper .swiper-initialized{
   width: 100%;
 }
-.chat div.chat-body{
-  padding-bottom: 160px;
+.chat-scrollbars{
+  max-height: calc(100vh - 135px);
+  // padding-bottom: 160px;
 }
-// .chat .chat-body .messages{
-//   height: 100%;
-// }
+.chat div.chat-body{
+  padding-bottom: 30px;
+}
+.chats-right .chat-time-area{
+  text-align: left;
+  padding-right: 20px;
+}
+.chats-right .chat-info{
+  flex-direction: row-reverse;
+}
+.chats:not(.chats-right) .chat-time-area{
+  text-align: right;
+  padding-left: 20px;
+}
+.chat .chat-body .messages .chats:not(.chats-right) div.chat-avatar{
+  padding-right: 20px;
+}
+.chat .chat-body .messages .chats.chats-right div.chat-avatar{
+  padding-left: 20px;
+}

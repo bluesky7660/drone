@@ -10,7 +10,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   const [showEmoji, setShowEmoji] = useState<{ [key: number]: boolean }>({});
 
   // 엔터키로 메시지 전송, Alt+Enter로 줄바꿈
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.altKey) {
       e.preventDefault();  // 엔터키로 전송할 때 기본 동작 방지
       handleSendMessage();
@@ -20,8 +20,11 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   };
 
   // 메시지 입력값 변경 처리
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewMessage(e.target.value);
+    // 자동 높이 조정
+    e.target.style.height = 'auto';  // 먼저 높이를 자동으로 줄여줍니다.
+    e.target.style.height = `${e.target.scrollHeight}px`;  // 입력된 텍스트에 맞게 높이를 조절합니다.
   };
 
   // 메시지 전송
@@ -52,13 +55,27 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
 
           {/* 메시지 입력창 */}
           <div className="form-wrap">
-            <input
+            {/* <input
               type="text"
               className="form-control"
               placeholder="Type Your Message"
               value={newMessage}
               onChange={handleInputChange} // 메시지 입력값 업데이트
               onKeyDown={handleKeyDown} // 키보드 이벤트 처리
+            /> */}
+            <textarea
+                id="inputChat"
+                className="inputChat form-control"
+                placeholder="메세지 보내기"
+                value={newMessage}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
+                rows={1}  // 처음에는 한 줄 크기
+                style={{
+                    resize: 'none', // 사용자가 크기를 조절할 수 없도록 함
+                    overflowY: 'auto', // 스크롤 가능하도록 함
+                    maxHeight: '80px' // 최대 높이 3줄(각각 약 40px)로 제한
+                }}
             />
           </div>
 
