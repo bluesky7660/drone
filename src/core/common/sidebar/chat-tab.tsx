@@ -53,6 +53,7 @@ const ChatTab: React.FC = () => {
                 // 모든 유저 정보가 반환될 때까지 기다림
                 const users = await Promise.all(userPromises);
                 const createdAt = chatData.createdAt instanceof Timestamp ? chatData.createdAt.toDate() : new Date();
+                const lastMessageTime = chatData?.lastMessageTime?.toDate() || null;
                 // Timestamp -> Date 변환
 
                 // 시간 포맷을 변경하는 함수
@@ -81,12 +82,12 @@ const ChatTab: React.FC = () => {
                   name: users.map(user => user.mmNickName).join(', '), // 채팅방 참여자 이름
                   avatar: users[0].avatar, // 첫 번째 유저의 사진을 대표 이미지로 사용
                   lastMessage: chatData.lastMessage || '새 채팅방 ~!', // 마지막 메시지 기본값
-                  time: formatDate(createdAt) || '시간 없음', // 시간 기본값
+                  time: lastMessageTime != null ? formatDate(lastMessageTime) : formatDate(createdAt), // 시간 기본값
                   createdAt ,
                 };
               })
             );
-            chatRooms.sort((a, b) => b.createdAt.getTime()  - a.createdAt.getTime() );
+            chatRooms.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime() );
             setChatList(chatRooms);
           });
           return () => unsubscribe();
@@ -203,19 +204,25 @@ const ChatTab: React.FC = () => {
                 <div className="swiper-wrapper">
                 <Swiper
                     spaceBetween={15}
+                    slidesPerView={4}
                     >
-                    <SwiperSlide>
-                    <Link to={routes.chat} className="chat-status text-center">
-                      <div className="avatar avatar-lg online d-block">
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-11.jpg"
-                          alt="Image"
-                          className="rounded-circle"
-                        />
-                      </div>
-                      <p>Nichol</p>
-                    </Link>
+                    {chatList.length > 0 ? (
+                  chatList.map((chat) => (<SwiperSlide key={chat.id}>
+                      <Link to={`${routes.chat}/${chat.id}`} className="chat-status text-center">
+                        <div className="avatar avatar-lg online d-block">
+                          <ImageWithBasePath
+                            src={chat.avatar || "/assets/img/profiles/avatar-11.jpg"}
+                            alt="프로필이미지"
+                            className="rounded-circle"
+                          />
+                        </div>
+                        <p>{chat.name}</p>
+                      </Link>
                     </SwiperSlide>
+                    ))
+                    ) : (
+                      <div>없음</div>
+                    )}
                   </Swiper>
                   
                 </div>
@@ -330,7 +337,7 @@ const ChatTab: React.FC = () => {
                           <ImageWithBasePath
                             src={chat.avatar || "/assets/img/profiles/avatar-11.jpg"}
                             className="rounded-circle border border-warning border-2"
-                            alt="image"
+                            alt="프로필이미지"
                           />
                         </div>
                         <div className="chat-user-info">

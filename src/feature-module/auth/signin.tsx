@@ -76,6 +76,11 @@ const Signin = () => {
       console.error(error);
     }
   };
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleLogin(); // 로그인 호출
+    }
+  };
 
   return (
     <>
@@ -85,7 +90,7 @@ const Signin = () => {
             <div className="col-lg-6 col-md-12 col-sm-12">
               <div className="row justify-content-center align-items-center vh-100 overflow-auto flex-wrap login-bg1">
                 <div className="col-md-9 mx-auto p-4">
-                  <form>
+                  <form id='loginForm'>
                     <div>
                       <div className="mx-auto mb-5 text-center">
                         <ImageWithBasePath
@@ -107,6 +112,7 @@ const Signin = () => {
                                 type="text"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                onKeyDown={handleKeyDown}
                                 className="form-control"
                               />
                               <span className="input-icon-addon">
@@ -119,6 +125,7 @@ const Signin = () => {
                                 type={isPasswordVisible ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                onKeyDown={handleKeyDown}
                                 className="pass-input form-control"
                               />
                               <span
