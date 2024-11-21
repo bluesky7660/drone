@@ -59,7 +59,9 @@ const ChatTab: React.FC = () => {
                 // 시간 포맷을 변경하는 함수
                 const formatDate = (date: Date) => {
                   const now = new Date();
-                  const diffTime = now.getTime() - date.getTime();
+                  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                  const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                  const diffTime = today.getTime() - targetDate.getTime();
                   const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
 
                   if (diffDays === 0) {

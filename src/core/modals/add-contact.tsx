@@ -1,196 +1,132 @@
-import React from 'react'
+import React from 'react';
 import { Link } from 'react-router-dom'
-import type { DatePickerProps } from 'antd';
-import { DatePicker } from 'antd';
+import { collection, addDoc, query, where, getDoc, getDocs, doc, setDoc } from 'firebase/firestore';
+import { firebaseDB } from '@firebaseApi/firebase';
+import ImageWithBasePath from '@/core/common/imageWithBasePath';
+import {AllContacts,SavedContacts} from '@etc/UseContacts';
+import {ContactSelects} from '@etc/ContactSelect';
+import useAuth from '@/etc/UseAuth';
+
 
 const AddContact = () => {
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
+  const {currentUserId} = useAuth(); // 현재 로그인된 유저 UID
+  const contacts = AllContacts(currentUserId);    // 연락처 목록
+  const { selectedContacts, handleContactSelects, clearSelectedContacts} = ContactSelects();
+  const savedContacts = SavedContacts(currentUserId);
+
+  const addContact = async () => {
+    try {
+      const userRef = doc(firebaseDB, `member/${currentUserId}`);
+      const userDoc = await getDoc(userRef);
+      if (!userDoc.exists()) {
+        console.log("사용자 문서 생성:",currentUserId);
+        await setDoc(userRef, { name: currentUserId }); // 사용자 문서 생성
+      }
+      // 각 선택된 연락처를 Firestore에 추가 (예: memberId의 서브컬렉션)
+      for (const contactId of selectedContacts) {
+        console.log("contactId:",contactId);
+        await setDoc(doc(firebaseDB, `member/${currentUserId}/contacts`, contactId), {
+          contactId: contactId, // 연락처 문서 ID
+        });
+      } 
+      clearSelectedContacts();
+    }catch (error) {
+      console.error("Error 연락처추가:", error);
+    }
   };
+  const filteredContacts = contacts.filter(contact => 
+    !savedContacts.some(savedContact => savedContact.uid === contact.uid)
+  );
   return (
     <>
-  {/* Add Contact */}
-  <div className="modal fade" id="add-contact">
-    <div className="modal-dialog modal-dialog-centered">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h4 className="modal-title">Add Contact</h4>
-          <button
-            type="button"
-            className="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          >
-            <i className="ti ti-x" />
-          </button>
-        </div>
-        <div className="modal-body">
-          <form >
-            <div className="row">
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">First Name</label>
-                  <div className="input-icon position-relative">
-                    <input type="text" className="form-control" />
-                    <span className="input-icon-addon">
-                      <i className="ti ti-user" />
-                    </span>
-                  </div>
+    {/* Add Contact */}
+    <div className="modal fade" id="add-contact">
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h4 className="modal-title">연락처 추가</h4>
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <i className="ti ti-x" />
+            </button>
+          </div>
+          <div className="modal-body">
+            <form>
+              <div className="search-wrap contact-search mb-3">
+                <div className="input-group">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search"
+                  />
+                  <Link to="#" className="input-group-text">
+                    <i className="ti ti-search" />
+                  </Link>
                 </div>
               </div>
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">Last Name</label>
-                  <div className="input-icon position-relative">
-                    <input type="text" className="form-control" />
-                    <span className="input-icon-addon">
-                      <i className="ti ti-user" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-12">
-                <div className="mb-3">
-                  <label className="form-label">Email</label>
-                  <div className="input-icon position-relative">
-                    <input type="text" className="form-control" />
-                    <span className="input-icon-addon">
-                      <i className="ti ti-mail" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">Phone</label>
-                  <div className="input-icon position-relative">
-                    <input type="text" className="form-control" />
-                    <span className="input-icon-addon">
-                      <i className="ti ti-phone" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">Date of Birth</label>
-                  <div className="input-icon antd-pickers position-relative">
-                    
-                    <DatePicker getPopupContainer={(trigger) => trigger.parentElement || document.body}  className="form-control datetimepicker" onChange={onChange} />
-                    <span className="input-icon-addon">
-                      <i className="ti ti-calendar-event" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-12">
-                <div className="mb-3">
-                  <label className="form-label">Website Address</label>
-                  <div className="input-icon position-relative">
-                    <input type="text" className="form-control" />
-                    <span className="input-icon-addon">
-                      <i className="ti ti-globe" />
-                    </span>
-                  </div>
-                </div>
-                <div className="card border">
-                  <div className="card-header border-bottom">
-                    <h6>Social Information</h6>
-                  </div>
-                  <div className="card-body pb-1">
-                    <div className="row align-items-center">
-                      <div className="col-md-4">
-                        <label className="form-label text-default fw-normal mb-3">
-                          Facebook
-                        </label>
-                      </div>
-                      <div className="col-md-8">
-                        <div className="input-icon position-relative mb-3">
-                          <input type="text" className="form-control" />
-                          <span className="input-icon-addon">
-                            <i className="ti ti-brand-facebook" />
-                          </span>
+              <h6 className="mb-3 fw-medium fs-16">연락처</h6>
+              <div className="contact-scroll contact-select mb-3">
+                {filteredContacts.map((contact) => (
+                    <label htmlFor={`contact-${contact.uid}`}
+                      key={contact.uid}
+                      className="contact-user d-flex align-items-center justify-content-between"
+                    >
+                      <div className="d-flex align-items-center">
+                        <div className="avatar avatar-lg">
+                          <ImageWithBasePath
+                            src="assets/img/profiles/avatar-01.jpg"
+                            className="rounded-circle"
+                            alt="image"
+                          />
+                        </div>
+                        <div className="ms-2">
+                          <h6>{contact.mmNickName || contact.mmName}</h6>
+                          <small>{contact.mmEmail}</small>
                         </div>
                       </div>
-                      <div className="col-md-4">
-                        <label className="form-label text-default fw-normal mb-3">
-                          Twitter
-                        </label>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id={`contact-${contact.uid}`}
+                          checked={selectedContacts.includes(contact.uid)}
+                          onChange={() => handleContactSelects(contact.uid)}
+                        />
                       </div>
-                      <div className="col-md-8">
-                        <div className="input-icon position-relative mb-3">
-                          <input type="text" className="form-control" />
-                          <span className="input-icon-addon">
-                            <i className="ti ti-brand-twitter" />
-                          </span>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <label className="form-labe text-default fw-normall mb-3">
-                          Instagram
-                        </label>
-                      </div>
-                      <div className="col-md-8">
-                        <div className="input-icon position-relative mb-3">
-                          <input type="text" className="form-control" />
-                          <span className="input-icon-addon">
-                            <i className="ti ti-brand-instagram" />
-                          </span>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <label className="form-label text-default fw-normal mb-3">
-                          Linked in
-                        </label>
-                      </div>
-                      <div className="col-md-8">
-                        <div className="input-icon position-relative mb-3">
-                          <input type="text" className="form-control" />
-                          <span className="input-icon-addon">
-                            <i className="ti ti-brand-linkedin" />
-                          </span>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <label className="form-label text-default fw-normal mb-3">
-                          YouTube
-                        </label>
-                      </div>
-                      <div className="col-md-8">
-                        <div className="input-icon position-relative mb-3">
-                          <input type="text" className="form-control" />
-                          <span className="input-icon-addon">
-                            <i className="ti ti-brand-youtube" />
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    </label>
+                  ))}
+              </div>
+              <div className="row g-3">
+                <div className="col-6">
+                  <Link
+                    to="#"
+                    className="btn btn-outline-primary w-100"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    취소
+                  </Link>
+                </div>
+                <div className="col-6">
+                  <button
+                    type="button"
+                    className="btn btn-primary w-100"
+                    onClick={addContact}
+                    data-bs-dismiss="modal"
+                  >
+                    채팅 시작
+                  </button>
                 </div>
               </div>
-            </div>
-            <div className="row g-3">
-              <div className="col-6">
-                <Link
-                  to="#"
-                  className="btn btn-outline-primary w-100"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                >
-                  Cancel
-                </Link>
-              </div>
-              <div className="col-6">
-                <button type="button" data-bs-dismiss="modal" className="btn btn-primary w-100">
-                  Add Contact
-                </button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   {/* /Add Contact */}
  
 </>

@@ -1,76 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { Link , useNavigate } from 'react-router-dom';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
-import { firebaseDB, auth } from '@firebaseApi/firebase';  // Firebase 초기화된 파일
-import { onAuthStateChanged } from 'firebase/auth';
+import { firebaseDB } from '@firebaseApi/firebase';  // Firebase 초기화된 파일
 import ImageWithBasePath from '@/core/common/imageWithBasePath';
+import {AllContacts} from '@etc/UseContacts';
+import {ContactSelect} from '@etc/ContactSelect';
+import useAuth from '@/etc/UseAuth';
 
 const NewChat = () => {
-  const [contacts, setContacts] = useState<any[]>([]);  // 연락처 목록
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);  // 현재 로그인된 유저 UID
-  const [selectedContacts, setSelectedContacts] = useState<string[]>([]);  // 선택된 유저들 UID
+  // const [currentUserId, setCurrentUserId] = useState<string | null>(null);  // 현재 로그인된 유저 UID
+  const {currentUserId} = useAuth();
+  const contacts = AllContacts(currentUserId);    // 연락처 목록 // 선택된 유저들 UID
   const navigate = useNavigate();
-  // 현재 로그인된 유저 UID 가져오기
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log('User UID:', user.uid); // 현재 로그인한 유저 UID 확인
-        setCurrentUserId(user.uid);
-      } else {
-        console.log('No user is logged in');
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  // member 컬렉션에서 모든 유저를 불러오기
-  useEffect(() => {
-    const fetchContacts = async () => {
-      const contactsSnapshot = await getDocs(collection(firebaseDB, 'member'));
-      const contactsList = contactsSnapshot.docs.map((doc) => ({
-        uid: doc.id,  // Firebase 문서의 ID를 uid로 사용
-        ...doc.data(),  // 문서의 데이터를 포함
-      }));
-      console.log('Fetched Contacts:', contactsList);  // 유저 목록 확인
-      
-    setContacts(contactsList);
-    };
-
-    if (currentUserId) {
-      fetchContacts();
-    }
-  }, [currentUserId]);
-
-  // 유저 선택/해제
-  const handleContactSelect = (uid: string) => {
-    setSelectedContacts((prevSelected) => {
-      if (prevSelected.includes(uid)) {
-        return prevSelected.filter((id) => id !== uid);
-      } else {
-        return [...prevSelected, uid];
-      }
-    });
-  };
+  const { selectedContact, handleContactSelect,clearSelectedContact} = ContactSelect();
 
   // 1:1 채팅방 생성
   const createChatRoom = async () => {
     console.log("생성준비중");
     console.log("currentUserId:",currentUserId);
-    if (!currentUserId || selectedContacts.length === 0) return;
+    if (!currentUserId || selectedContact== null) return;
   
-    const partnerId = selectedContacts[0]; // 1:1 채팅방이므로 첫 번째 선택된 사람만 사용
+    const partnerId = selectedContact; // 1:1 채팅방이므로 첫 번째 선택된 사람만 사용
     console.log("partnerId:",partnerId);
     // participants 배열에서 현재 사용자와 파트너가 둘 다 포함된 채팅방을 찾는 쿼리
     const chatRoomQuery = query(
       collection(firebaseDB, 'chatRooms'),
-      // where('participants', 'array-contains-any', [currentUserId, partnerId]), 
-      where('participants', '==', currentUserId), 
-      where('participants', 'array-contains', partnerId)     
+      where('participants', 'array-contains', currentUserId) // currentUserId만 기준으로 필터링
     );
+  
     const querySnapshot = await getDocs(chatRoomQuery);
-    console.log("querySnapshot:",querySnapshot.empty);
-    if (querySnapshot.empty) {
+    console.log("querySnapshot:", querySnapshot.empty);
+  
+    // 이미 currentUserId와 partnerId가 포함된 채팅방이 있는지 확인
+    const existingChatRoom = querySnapshot.docs.find(doc =>
+      doc.data().participants.includes(partnerId) // partnerId도 포함되어 있는지 확인
+    );
+  
+    if (existingChatRoom) {
+      console.log("이미 채팅방이 존재합니다.");
+      navigate(`/chat/${existingChatRoom.id}`);
+    } else {
       console.log("방생성중");
       // 채팅방이 없으면 새로 생성
       const docRef = await addDoc(collection(firebaseDB, 'chatRooms'), {
@@ -78,11 +47,17 @@ const NewChat = () => {
         messages: [],
         createdAt: new Date(),
       });
-      navigate(`/chat/${docRef.id}`); 
+      navigate(`/chat/${docRef.id}`);
     }
+    console.log("선택해제");
     // 여기에 채팅방 페이지로 리다이렉트 할 수 있습니다 (예: react-router-dom 사용)
-    setSelectedContacts([]);
+    clearSelectedContact();
   };
+  // const handleCreateChat = () => {
+  //   if (currentUserId && selectedContact.length > 0) {
+  //     createChatRoom(currentUserId, selectedContact[0], navigate);
+  //   }
+  // };
 
   return (
     <>
@@ -120,7 +95,7 @@ const NewChat = () => {
                   {contacts.map((contact) => (
                     // 현재 로그인한 유저 제외하고 목록에 보여주기
                     currentUserId !== contact.uid && (
-                      <label htmlFor={`contact-${contact.uid}`}
+                      <label htmlFor={`saved-contact-${contact.uid}`}
                         key={contact.uid}
                         className="contact-user d-flex align-items-center justify-content-between"
                       >
@@ -141,7 +116,9 @@ const NewChat = () => {
                           <input
                             className="form-check-input"
                             type="checkbox"
-                            id={`contact-${contact.uid}`}
+                            name='chat_partner'
+                            id={`saved-contact-${contact.uid}`}
+                            checked={selectedContact == contact.uid}
                             onChange={() => handleContactSelect(contact.uid)}
                           />
                         </div>
@@ -164,7 +141,10 @@ const NewChat = () => {
                     <button
                       type="button"
                       className="btn btn-primary w-100"
-                      onClick={createChatRoom}
+                      onClick={() => {
+                        createChatRoom();  // 채팅방 생성 함수 호출
+                        clearSelectedContact();  // 선택된 연락처 초기화 함수 호출
+                      }}
                       data-bs-dismiss="modal"
                     >
                       채팅 시작

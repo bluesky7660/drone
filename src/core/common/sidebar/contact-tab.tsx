@@ -1,8 +1,21 @@
-import React from 'react'
+import { useEffect } from 'react';
 import ImageWithBasePath from '../imageWithBasePath'
 import { Link } from 'react-router-dom'
 import Scrollbars from 'react-custom-scrollbars-2'
+import {SavedGroupContacts} from '@etc/UseContacts';
+import useAuth from '@/etc/UseAuth';
+
+type Contact = {
+  uid: string;
+  name: string;
+  lastSeen: string;
+  avatar: string;
+};
 const ContactTab = () => {
+  const {currentUserId} = useAuth();
+  const contacts = SavedGroupContacts(currentUserId);
+  useEffect(() => {
+  });
   return (
     <>
         {/* Chats sidebar */}
@@ -21,7 +34,7 @@ const ContactTab = () => {
           <div className="slimscroll">
             <div className="chat-search-header">
               <div className="header-title d-flex align-items-center justify-content-between">
-                <h4 className="mb-3">Contacts</h4>
+                <h4 className="mb-3">연락처</h4>
                 <div className="d-flex align-items-center mb-3">
                   <Link
                     to="#"
@@ -40,7 +53,7 @@ const ContactTab = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Search Contacts"
+                      placeholder="연락처 검색"
                     />
                     <span className="input-group-text">
                       <i className="ti ti-search" />
@@ -53,157 +66,41 @@ const ContactTab = () => {
             <div className="sidebar-body chat-body">
               {/* Left Chat Title */}
               <div className="d-flex justify-content-between align-items-center mb-3">
-                <h5>All Contacts</h5>
+                <h5>모든 연락처</h5>
               </div>
               {/* /Left Chat Title */}
               <div className="chat-users-wrap">
-                <div className="mb-4">
-                  <h6 className="mb-2">A</h6>
-                  <div className="chat-list">
-                    <Link
-                      to="#"
-                      data-bs-toggle="modal"
-                      data-bs-target="#contact-details"
-                      className="chat-user-list"
-                    >
-                      <div className="avatar avatar-lg online me-2">
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-01.jpg"
-                          className="rounded-circle"
-                          alt="image"
-                        />
-                      </div>
-                      <div className="chat-user-info">
-                        <div className="chat-user-msg">
-                          <h6>Aaryian Jose</h6>
-                          <p>last seen 5 days ago</p>
+                {Object.keys(contacts).map((letter) => (
+                <div className="mb-4" key={letter}>
+                  <h6 className="mb-2">{letter}</h6>
+                  {contacts[letter].map((contact: Contact) => 
+                    // 현재 로그인한 유저 제외하고 목록에 보여주기
+                    (
+                    <div className="chat-list">
+                      <Link
+                        to="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#contact-details"
+                        className="chat-user-list"
+                      >
+                        <div className="avatar avatar-lg online me-2">
+                          <ImageWithBasePath
+                            src={contact.avatar}
+                            alt="프로필이미지"
+                            className="rounded-circle"
+                          />
                         </div>
-                      </div>
-                    </Link>
-                  </div>
+                        <div className="chat-user-info">
+                          <div className="chat-user-msg">
+                            <h6>{contact.name}</h6>
+                            <p>last seen 5 days ago</p>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
                 </div>
-                <div className="mb-4">
-                  <h6 className="mb-2">C</h6>
-                  <div className="chat-list">
-                    <Link
-                      to="#"
-                      data-bs-toggle="modal"
-                      data-bs-target="#contact-details"
-                      className="chat-user-list"
-                    >
-                      <div className="avatar avatar-lg offline me-2">
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-03.jpg"
-                          className="rounded-circle"
-                          alt="image"
-                        />
-                      </div>
-                      <div className="chat-user-info">
-                        <div className="chat-user-msg">
-                          <h6>Clyde Smith</h6>
-                          <p>is busy now!</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                  <div className="chat-list">
-                    <Link
-                      to="#"
-                      data-bs-toggle="modal"
-                      data-bs-target="#contact-details"
-                      className="chat-user-list"
-                    >
-                      <div className="avatar avatar-lg online me-2">
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-04.jpg"
-                          className="rounded-circle"
-                          alt="image"
-                        />
-                      </div>
-                      <div className="chat-user-info">
-                        <div className="chat-user-msg">
-                          <h6>Carla Jenkins</h6>
-                          <p>is online now</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-                <div className="mb-4">
-                  <h6 className="mb-2">D</h6>
-                  <div className="chat-list">
-                    <Link
-                      to="#"
-                      data-bs-toggle="modal"
-                      data-bs-target="#contact-details"
-                      className="chat-user-list"
-                    >
-                      <div className="avatar avatar-lg away me-2">
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-14.jpg"
-                          className="rounded-circle"
-                          alt="image"
-                        />
-                      </div>
-                      <div className="chat-user-info">
-                        <div className="chat-user-msg">
-                          <h6>Danielle Baker</h6>
-                          <p>last seen a week ago</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-                <div className="mb-4">
-                  <h6 className="mb-2">E</h6>
-                  <div className="chat-list">
-                    <Link
-                      to="#"
-                      data-bs-toggle="modal"
-                      data-bs-target="#contact-details"
-                      className="chat-user-list"
-                    >
-                      <div className="avatar avatar-lg online me-2">
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-06.jpg"
-                          className="rounded-circle"
-                          alt="image"
-                        />
-                      </div>
-                      <div className="chat-user-info">
-                        <div className="chat-user-msg">
-                          <h6>Edward Lietz</h6>
-                          <p>Do you know which App or ...</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-                <div className="mb-4">
-                  <h6 className="mb-2">F</h6>
-                  <div className="chat-list">
-                    <Link
-                      to="#"
-                      data-bs-toggle="modal"
-                      data-bs-target="#contact-details"
-                      className="chat-user-list"
-                    >
-                      <div className="avatar avatar-lg online me-2">
-                        <ImageWithBasePath
-                          src="assets/img/profiles/avatar-07.jpg"
-                          className="rounded-circle"
-                          alt="image"
-                        />
-                      </div>
-                      <div className="chat-user-info">
-                        <div className="chat-user-msg">
-                          <h6>Federico Wells</h6>
-                          <p>last seen 10 min ago</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>

@@ -28,6 +28,7 @@
     "baseUrl": "src",  // src 폴더를 기준으로 경로 설정
     "paths": {
       "@/*":["*"],
+      "@etc/*": ["etc/*"],
       "@firebaseApi/*": ["firebase/*"],
       "@context/*": ["context/*"],
       "@hooks/*": ["core/hooks/*"],
