@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Scrollbars from 'react-custom-scrollbars-2'
 import { Link } from 'react-router-dom';
 import { Timestamp } from 'firebase/firestore';
-import ImageWithBasePath from "../../../core/common/imageWithBasePath"; // 이미지 컴포넌트
+import copy from "clipboard-copy";
+import ImageWithBasePath from "../../../core/common/imageWithBasePath";
 
 interface Message {
   id: string;
@@ -22,11 +23,28 @@ interface MessageListProps {
 
 const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEmoji, currentUserId }) => {
     const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
+    const textRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+    // const [copiedText, setCopiedText] = useState<string | null>(null);
+    const [isCopied, setIsCopied] = useState(false);
     useEffect(() => {
         if (endOfMessagesRef.current) {
           endOfMessagesRef.current.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages]);
+
+    const handleCopy = (index:number) => {
+        
+          // 일반 요소의 텍스트를 가져오기 (p, span 등 지원 가능)
+          const textToCopy = textRefs.current[index]?.innerText || textRefs.current[index]?.textContent || "";
+        if (textToCopy) {
+          copy(textToCopy); // copy 함수로 텍스트 복사
+          setIsCopied(true);
+          setTimeout(() => {
+            setIsCopied(false);
+          }, 2000); // 2초 후 복사 상태 초기화
+        }
+      };
+
     return (
         <Scrollbars
         className="chat-scrollbars"
@@ -42,7 +60,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEm
         >
         <div className="chat-body chat-page-group">
             <div className="messages">
-            {messages.map((message) => (
+            {messages.map((message,index) => (
                 <div
                 key={message.id}
                 className={`chats ${message.senderId === currentUserId ? 'chats-right' : ''}`}
@@ -66,7 +84,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEm
                         </div>
                         <div className="chat-info">
                             <div className="message-content">
-                                {message.text}
+                                <p className="mb-0" ref={(el) => textRefs.current[index] = el}>{message.text}</p>
                                 <div className="emoj-group">
                                     <ul>
                                         <li className="emoj-action">
@@ -165,7 +183,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEm
                                 </Link>
                                 <ul className="dropdown-menu dropdown-menu-end p-3">
                                     <li>
-                                        <Link className="dropdown-item" to="#">
+                                        <Link className="dropdown-item" to="#" onClick={() => handleCopy(index)}>
                                             <i className="ti ti-file-export me-2" />
                                             메시지 복사
                                         </Link>
