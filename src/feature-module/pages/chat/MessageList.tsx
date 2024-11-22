@@ -33,15 +33,14 @@ const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEm
     }, [messages]);
 
     const handleCopy = (index:number) => {
-        
-          // 일반 요소의 텍스트를 가져오기 (p, span 등 지원 가능)
+ 
           const textToCopy = textRefs.current[index]?.innerText || textRefs.current[index]?.textContent || "";
         if (textToCopy) {
-          copy(textToCopy); // copy 함수로 텍스트 복사
+          copy(textToCopy);
           setIsCopied(true);
           setTimeout(() => {
             setIsCopied(false);
-          }, 2000); // 2초 후 복사 상태 초기화
+          }, 2000); 
         }
       };
 
