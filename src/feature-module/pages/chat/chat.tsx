@@ -126,7 +126,7 @@ const Chat: React.FC = () => {
    */
   const handleSendMessage = async (message: string) => {
     if (!chatId || !message.trim()) return;
-
+    console.log("newMessage.trim():",message);
     try {
       const messageRef = collection(firebaseDB, "chatRooms", chatId, "messages");
       const newMessage = {

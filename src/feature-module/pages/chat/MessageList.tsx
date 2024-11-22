@@ -24,7 +24,6 @@ interface MessageListProps {
 const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEmoji, currentUserId }) => {
     const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
     const textRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-    // const [copiedText, setCopiedText] = useState<string | null>(null);
     const [isCopied, setIsCopied] = useState(false);
     useEffect(() => {
         if (endOfMessagesRef.current) {
@@ -42,7 +41,17 @@ const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEm
             setIsCopied(false);
           }, 2000); 
         }
-      };
+    };
+    const renderMessage = (message: string) => {
+        const formattedMessage = message.split('\n').map((line, index) => (
+            <React.Fragment key={index}>
+                {line}
+                <br /> {/* 줄바꿈을 <br />로 변환 */}
+            </React.Fragment>
+        ));
+    
+        return formattedMessage;
+    };
 
     return (
         <Scrollbars
@@ -83,7 +92,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEm
                         </div>
                         <div className="chat-info">
                             <div className="message-content">
-                                <p className="mb-0" ref={(el) => textRefs.current[index] = el}>{message.text}</p>
+                                <p className="mb-0" ref={(el) => textRefs.current[index] = el}>{renderMessage(message.text)}</p>
                                 <div className="emoj-group">
                                     <ul>
                                         <li className="emoj-action">

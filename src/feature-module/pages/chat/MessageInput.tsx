@@ -14,6 +14,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
     if (e.key === 'Enter' && !e.altKey) {
       e.preventDefault();  // 엔터키로 전송할 때 기본 동작 방지
       handleSendMessage();
+      // e.target.style.height = `${e.target.scrollHeight}px`;
     } else if (e.key === 'Enter' && e.altKey) {
       setNewMessage(newMessage + '\n');  // Alt+Enter로 줄바꿈 추가
     }
@@ -30,8 +31,14 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   // 메시지 전송
   const handleSendMessage = () => {
     if (newMessage.trim() === '') return; // 비어있는 메시지는 전송하지 않음
-    onSendMessage(newMessage.trim()); // 상위 컴포넌트로 메시지 전송
+    // console.log("newMessage.trim():",newMessage.trim());
+    onSendMessage(newMessage); // 상위 컴포넌트로 메시지 전송
+
     setNewMessage(''); // 입력창 비우기
+    const textArea = document.querySelector('#inputChat') as HTMLTextAreaElement;
+    if (textArea) {
+      textArea.style.height = `38px`;  // 다시 높이 조정
+    }
   };
 
   // 이모지 토글
