@@ -7,7 +7,7 @@ import { useMember } from '@hooks/useMember';
 
 export const ProfileTab = () => {
     const routes = all_routes
-    const { state, userName, formattedPhone, formattedRegDate } = useMember();
+    const { state, formattedPhone, formattedRegDate } = useMember();
   return (
     <>
         {/* Profile sidebar */}
@@ -58,7 +58,7 @@ export const ProfileTab = () => {
                   <div className="d-flex profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
                       <h6 className="fs-14">이름</h6>
-                      <p className="fs-16 ">{userName}</p>
+                      <p className="fs-16 ">{state.mmName}</p>
                     </div>
                     <span>
                       <i className="ti ti-user-circle fs-16" />
@@ -66,8 +66,8 @@ export const ProfileTab = () => {
                   </div>
                   <div className="d-flex profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
-                      <h6 className="fs-14">이름</h6>
-                      <p className="fs-16 ">{userName}</p>
+                      <h6 className="fs-14">닉네임</h6>
+                      <p className="fs-16 ">{state.mmNickName}</p>
                     </div>
                     <span>
                       <i className="ti ti-user-circle fs-16" />
@@ -85,7 +85,7 @@ export const ProfileTab = () => {
                   <div className="d-flex profile-list  profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
                       <h6 className="fs-14">Gender</h6>
-                      <p className="fs-16">{state.mmGender==1 이면 남자 2면 여자}</p>
+                      <p className="fs-16">{state.mmGender === 1 ? "남자" : state.mmGender === 2 ? "여자" : "알 수 없음"}</p>
                     </div>
                     <span>
                       <i className="ti ti-user-star fs-16" />
