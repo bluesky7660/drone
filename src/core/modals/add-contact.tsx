@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
-import { collection, addDoc, query, where, getDoc, getDocs, doc, setDoc } from 'firebase/firestore';
+import {getDoc,doc, setDoc } from 'firebase/firestore';
 import { firebaseDB } from '@firebaseApi/firebase';
 import ImageWithBasePath from '@/core/common/imageWithBasePath';
 import {AllContacts,SavedContacts} from '@etc/UseContacts';

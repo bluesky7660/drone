@@ -34,7 +34,7 @@ const AllContacts = (currentUserId: string | null) => {
 };
 const SavedContacts = (currentUserId: string | null) => {
     const [savedcontacts, setsavedContacts] = useState<any[]>([]);
-    const [groupedSavedContacts, setGroupedSavedContacts] = useState<any>({});
+    // const [groupedSavedContacts, setGroupedSavedContacts] = useState<any>({});
 
     useEffect(() => {
         if (!currentUserId) return;

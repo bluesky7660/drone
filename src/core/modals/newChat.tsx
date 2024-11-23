@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {} from 'react';
 import { Link , useNavigate } from 'react-router-dom';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { firebaseDB } from '@firebaseApi/firebase';  // Firebase 초기화된 파일

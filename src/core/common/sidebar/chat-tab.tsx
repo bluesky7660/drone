@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { all_routes } from '../../../feature-module/router/all_routes'
 import Scrollbars from 'react-custom-scrollbars-2'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { collection, query, where, getDocs, doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { firebaseDB } from '@firebaseApi/firebase';
 import { MemberContext } from '@context/memberContext';
 import { Timestamp } from 'firebase/firestore';

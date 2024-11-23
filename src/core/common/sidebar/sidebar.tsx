@@ -5,8 +5,8 @@ import { useDispatch } from "react-redux";
 import { all_routes } from "../../../feature-module/router/all_routes";
 import { Tooltip } from "antd";
 import { setDark } from "../../data/redux/commonSlice";
-import { getAuth, signOut } from "firebase/auth";
-import { MemberContext } from "@context/memberContext";
+import {  signOut } from "firebase/auth";
+// import { MemberContext } from "@context/memberContext";
 import { auth } from '../../../firebase/firebase';
 import Cookies from 'js-cookie';
 
@@ -16,7 +16,7 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode"));
-  const { dispatch: memberDispatch } = useContext(MemberContext);
+  // const { dispatch: memberDispatch } = useContext(MemberContext);
 
   const LayoutDark = () => {
     if (darkMode === "enabled") {
