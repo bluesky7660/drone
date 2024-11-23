@@ -42,9 +42,9 @@ export const ProfileTab = () => {
                   </span>
                 </div>
                 <div>
-                  <h6 className="fs-16">{userName}</h6>
+                  <h6 className="fs-16">{state.mmNickName||state.mmName}</h6>
                   <div className="d-flex justify-content-center">
-                    <span className="fs-14 text-center">Web Designer</span>
+                    <span className="fs-14 text-center">{state.mmEmail}</span>
                   </div>
                 </div>
               </div>
@@ -66,6 +66,15 @@ export const ProfileTab = () => {
                   </div>
                   <div className="d-flex profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
+                      <h6 className="fs-14">이름</h6>
+                      <p className="fs-16 ">{userName}</p>
+                    </div>
+                    <span>
+                      <i className="ti ti-user-circle fs-16" />
+                    </span>
+                  </div>
+                  <div className="d-flex profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
+                    <div>
                       <h6 className="fs-14">전화번호</h6>
                       <p className="fs-16">{formattedPhone}</p>
                     </div>
@@ -76,7 +85,7 @@ export const ProfileTab = () => {
                   <div className="d-flex profile-list  profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
                       <h6 className="fs-14">Gender</h6>
-                      <p className="fs-16">Female</p>
+                      <p className="fs-16">{state.mmGender==1 이면 남자 2면 여자}</p>
                     </div>
                     <span>
                       <i className="ti ti-user-star fs-16" />
@@ -100,7 +109,7 @@ export const ProfileTab = () => {
                       <i className="ti ti-user-check fs-16" />
                     </span>
                   </div>
-                  <div className="d-flex profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
+                  {/* <div className="d-flex profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
                       <h6 className="fs-14">지역</h6>
                       <p className="fs-16">Portland, USA</p>
@@ -108,7 +117,7 @@ export const ProfileTab = () => {
                     <span>
                       <i className="ti ti-map-2 fs-16" />
                     </span>
-                  </div>
+                  </div> */}
                   <div className="d-flex profile-list justify-content-between align-items-center">
                     <div>
                       <h6 className="fs-14">가입일</h6>

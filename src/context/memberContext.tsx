@@ -9,6 +9,7 @@ interface Member {
   mmDelNy: boolean;     // 삭제 여부
   mmEmail: string;      // 이메일
   mmName: string;       // 이름
+  mmGender: number;
   mmNickName: string;   // 닉네임
   mmPassword: string;   // 비밀번호
   mmPhoneNum: string;   // 전화번호
@@ -27,6 +28,7 @@ const initialState: Member = {
   mmDelNy: false,
   mmEmail: '',
   mmName: '',
+  mmGender:0,
   mmNickName: '',
   mmPassword: '',
   mmPhoneNum: '',
