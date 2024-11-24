@@ -29,12 +29,12 @@ const root = ReactDOM.createRoot(
 root.render(
   // <React.StrictMode>
     <Provider store={Store}>
-    <HelmetProvider>
-      <BrowserRouter basename={base_path} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <MemberProvider>
-          < Mainapp />
-        </MemberProvider>
-      </BrowserRouter>
+      <HelmetProvider>
+        <BrowserRouter basename={base_path} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <MemberProvider>
+            < Mainapp />
+          </MemberProvider>
+        </BrowserRouter>
       </HelmetProvider>
     </Provider>
   // </React.StrictMode>s

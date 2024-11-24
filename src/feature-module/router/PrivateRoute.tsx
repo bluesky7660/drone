@@ -7,7 +7,7 @@ type PrivateRouteProps = RouteProps & {
   element: React.ReactNode;
 };
 
-const PrivateRoute = ({ element, ...rest }: PrivateRouteProps) => {
+const PrivateRoute = React.memo(({ element, ...rest }: PrivateRouteProps) => {
   // 쿠키에서 'user'라는 이름으로 저장된 데이터를 가져옴
   const user = Cookies.get('user'); 
 
@@ -18,6 +18,6 @@ const PrivateRoute = ({ element, ...rest }: PrivateRouteProps) => {
 
   // 쿠키가 존재하면 해당 element를 렌더링
   return <>{element}</>;
-};
+});
 
 export default PrivateRoute;

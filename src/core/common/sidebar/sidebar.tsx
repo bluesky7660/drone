@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import ImageWithBasePath from "../imageWithBasePath";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -10,7 +10,7 @@ import {  signOut } from "firebase/auth";
 import { auth } from '../../../firebase/firebase';
 import Cookies from 'js-cookie';
 
-const Sidebar1 = () => {
+const Sidebar = React.memo(() => {
   const routes = all_routes;
   const location = useLocation();
   const dispatch = useDispatch();
@@ -246,7 +246,7 @@ const Sidebar1 = () => {
       {/* /Left Sidebar Menu */}
     </>
   );
-};
+});
 
-const Sidebar = React.memo(Sidebar1);
+// const Sidebar = React.memo(Sidebar1);
 export default Sidebar;

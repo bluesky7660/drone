@@ -5,10 +5,10 @@ import Sidebar from "../core/common/sidebar/sidebar";
 import ChatSidebar from "../core/common/sidebar/chatSidebar";
 import CommonModals from "../core/modals/common-modals";
 
-const Feature = () => {
+const Feature = React.memo(() => {
   const themeDark = useSelector((state: any) => state?.darkMode);
   return (
-    <div className={themeDark?'darkmode':''}>
+    <div className={themeDark?'darkmode':'lightmode'}>
       <div className="main-wrapper" style={{ visibility: "visible" }}>
         <div className="content main_content">
           <Sidebar/>
@@ -19,6 +19,6 @@ const Feature = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Feature;
