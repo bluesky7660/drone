@@ -1,109 +1,139 @@
 import React, { useState, useEffect ,useContext } from 'react';
 import ImageWithBasePath from '../imageWithBasePath'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import { all_routes } from '../../../feature-module/router/all_routes'
 import Scrollbars from 'react-custom-scrollbars-2'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { collection, query, where, doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, doc, getDoc, onSnapshot,getDocs } from 'firebase/firestore';
 import { firebaseDB } from '@firebaseApi/firebase';
 import { MemberContext } from '@context/memberContext';
 import { Timestamp } from 'firebase/firestore';
 // Import Swiper styles
-import 'swiper/css';
+
 
 const ChatTab: React.FC = () => {
+  const navigate = useNavigate();
   const routes = all_routes;
   const [chatList, setChatList] = useState<any[]>([]); // 채팅방 리스트 상태
   const [activeTab,setActiveTab] = useState('전체 채팅');
   const { state } = useContext(MemberContext);
-  
-  useEffect(() => {
-    if (state) {
-      const fetchChatRooms = async () => {
-        try {
-          // chatRooms 컬렉션에서 참여자가 현재 사용자(uid)인 채팅방 찾기
-          const chatRoomsRef = collection(firebaseDB, 'chatRooms');
-          const q = query(chatRoomsRef, where('participants', 'array-contains', state.uid));
-          const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+  const [loading, setLoading] = useState<boolean>(true);
 
-            const chatRooms = await Promise.all(
-              querySnapshot.docs.map(async (docSnapshot) => {
-                const chatData = docSnapshot.data();
-                console.log("chatData:",chatData);
-                const participants = chatData.participants;
+  const fetchInitialChats = async () => {
+    if (!state) return;
+    setLoading(true);
+    const q = query(collection(firebaseDB, "chatRooms"), where("participants", "array-contains", state.uid));
+    const querySnapshot = await getDocs(q);
+    const initialChats = await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
+      const chatData = docSnapshot.data();
+      const participants = chatData.participants.filter((uid: string) => uid !== state.uid);
 
-                // 현재 사용자(uid)는 제외하고, 다른 참가자들의 UID만 가져옵니다.
-                const otherParticipants = participants.filter((uid: string) => uid !== state.uid);
+      const userPromises = participants.map(async (uid: string) => {
+        const userRef = doc(firebaseDB, "member", uid);
+        const userSnapshot = await getDoc(userRef);
+        const userData = userSnapshot.data();
+        return {
+          uid: userData?.uid,
+          mmNickName: userData?.mmNickName || userData?.mmName || "Unknown User",
+          avatar: userData?.avatar || "/assets/img/profiles/avatar-11.jpg",
+        };
+      });
 
-                // 상대방 정보 가져오기
-                const userRefs = otherParticipants.map((uid: string) => doc(firebaseDB, 'member', uid));
+      const users = await Promise.all(userPromises);
+      const createdAt = chatData.createdAt instanceof Timestamp ? chatData.createdAt.toDate() : new Date();
+      const lastMessageTime = chatData?.lastMessageTime?.toDate() || null;
 
-                // 상대방들의 정보를 가져오는 Promise 배열
-                const userPromises = userRefs.map(async (userRef) => {
-                  const userSnapshot = await getDoc(userRef);
-                  const userData = userSnapshot.data();
+      const formatDate = (date: Date) => {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const diffDays = Math.floor((today.getTime() - targetDate.getTime()) / (1000 * 3600 * 24));
 
-                  return {
-                    uid: userData?.uid,
-                    mmNickName: userData?.mmNickName || userData?.mmName || 'Unknown User', // 유저 이름
-                    avatar: userData?.avatar || '/assets/img/profiles/avatar-11.jpg', // 기본 이미지 경로
-                  };
-                });
-
-                // 모든 유저 정보가 반환될 때까지 기다림
-                const users = await Promise.all(userPromises);
-                const createdAt = chatData.createdAt instanceof Timestamp ? chatData.createdAt.toDate() : new Date();
-                const lastMessageTime = chatData?.lastMessageTime?.toDate() || null;
-                // Timestamp -> Date 변환
-
-                // 시간 포맷을 변경하는 함수
-                const formatDate = (date: Date) => {
-                  const now = new Date();
-                  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                  const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-                  const diffTime = today.getTime() - targetDate.getTime();
-                  const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
-
-                  if (diffDays === 0) {
-                    // 오늘이면 시간만 표시
-                    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                  } else if (diffDays === 1) {
-                    // 어제
-                    return `어제 ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-                  } else if (date.getFullYear() === now.getFullYear()) {
-                    // 같은 해의 과거 날짜
-                    return date.toLocaleDateString([], { month: '2-digit', day: '2-digit' });
-                  } else {
-                    // 작년
-                    return date.toLocaleDateString([], { year: 'numeric', month: '2-digit', day: '2-digit' });
-                  }
-                };
-                // 채팅방 정보와 상대방 유저 정보를 합침
-                return {
-                  id: docSnapshot.id,
-                  name: users.map(user => user.mmNickName).join(', '), // 채팅방 참여자 이름
-                  avatar: users[0].avatar, // 첫 번째 유저의 사진을 대표 이미지로 사용
-                  lastMessage: chatData.lastMessage || '새 채팅방 ~!', // 마지막 메시지 기본값
-                  time: lastMessageTime != null ? formatDate(lastMessageTime) : formatDate(createdAt), // 시간 기본값
-                  createdAt ,
-                };
-              })
-            );
-            chatRooms.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime() );
-            setChatList(chatRooms);
-          });
-          return () => unsubscribe();
-
-        } catch (error) {
-          console.error('채팅방 정보를 가져오는 중 오류 발생:', error);
-        }
+        if (diffDays === 0) return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        if (diffDays === 1) return `어제 ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+        if (date.getFullYear() === now.getFullYear())
+          return date.toLocaleDateString([], { month: "2-digit", day: "2-digit" });
+        return date.toLocaleDateString([], { year: "numeric", month: "2-digit", day: "2-digit" });
       };
 
-      fetchChatRooms();
+      return {
+        id: docSnapshot.id,
+        name: users.map((user) => user.mmNickName).join(", "),
+        avatar: users[0].avatar,
+        lastMessage: chatData.lastMessage || "새 채팅방 ~!",
+        time: lastMessageTime != null ? formatDate(lastMessageTime) : formatDate(createdAt),
+        createdAt,
+      };
+    }));
+
+    setChatList(initialChats); // 상태 갱신
+    setLoading(false);
+  };
+  useEffect(() => {
+    if (state) {
+      fetchInitialChats(); //초기
     }
   }, [state]);
+  useEffect(() => {
+    if (!state) return;
+    setLoading(true);
+    const unsubscribe = onSnapshot(
+      query(collection(firebaseDB, "chatRooms"), where("participants", "array-contains", state.uid)),
+      async (querySnapshot) => {
+        const updatedChats = await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
+          const chatData = docSnapshot.data();
+          const participants = chatData.participants.filter((uid: string) => uid !== state.uid);
   
-
+          const userPromises = participants.map(async (uid: string) => {
+            const userRef = doc(firebaseDB, "member", uid);
+            const userSnapshot = await getDoc(userRef);
+            const userData = userSnapshot.data();
+            return {
+              uid: userData?.uid,
+              mmNickName: userData?.mmNickName || userData?.mmName || "Unknown User",
+              avatar: userData?.avatar || "/assets/img/profiles/avatar-11.jpg",
+            };
+          });
+  
+          const users = await Promise.all(userPromises);
+          const createdAt = chatData.createdAt instanceof Timestamp ? chatData.createdAt.toDate() : new Date();
+          const lastMessageTime = chatData?.lastMessageTime?.toDate() || null;
+  
+          const formatDate = (date: Date) => {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            const diffDays = Math.floor((today.getTime() - targetDate.getTime()) / (1000 * 3600 * 24));
+  
+            if (diffDays === 0) return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            if (diffDays === 1) return `어제 ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+            if (date.getFullYear() === now.getFullYear())
+              return date.toLocaleDateString([], { month: "2-digit", day: "2-digit" });
+            return date.toLocaleDateString([], { year: "numeric", month: "2-digit", day: "2-digit" });
+          };
+  
+          return {
+            id: docSnapshot.id,
+            name: users.map((user) => user.mmNickName).join(", "),
+            avatar: users[0].avatar,
+            lastMessage: chatData.lastMessage || "새 채팅방 ~!",
+            time: lastMessageTime != null ? formatDate(lastMessageTime) : formatDate(createdAt),
+            createdAt,
+          };
+        }));
+  
+        setChatList(updatedChats); // 상태 갱신
+        setLoading(false);
+      }
+    );
+  
+    // Cleanup
+    return () => unsubscribe();
+  }, [state]);
+  
+  if (loading) {
+    return null; // 로딩 중에는 아무것도 렌더링하지 않음
+  }
   return (
     <>
         {/* Chats sidebar */}
@@ -334,7 +364,7 @@ const ChatTab: React.FC = () => {
                     {chatList.length > 0 ? (
                   chatList.map((chat) => (
                     <div className="chat-list" key={chat.id}>
-                      <Link to={`${routes.chat}/${chat.id}`} className="chat-user-list">
+                      <div onClick={() => navigate(`${routes.chat}/${chat.id}`)} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src={chat.avatar || "/assets/img/profiles/avatar-11.jpg"}
@@ -360,7 +390,7 @@ const ChatTab: React.FC = () => {
                             </div>
                           </div>
                         </div>
-                      </Link>
+                      </div>
                       <div className="chat-dropdown">
                         <Link className="#" to="#" data-bs-toggle="dropdown">
                           <i className="ti ti-dots-vertical" />

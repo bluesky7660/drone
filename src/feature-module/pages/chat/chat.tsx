@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import ImageWithBasePath from "../../../core/common/imageWithBasePath";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
@@ -27,6 +27,7 @@ interface Message {
 const Chat: React.FC = () => {
   const { chatId } = useParams<{ chatId: string }>();
   const { state } = useContext(MemberContext);
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
   const [otherUser, setOtherUser] = useState<{ mmName: string; mmNickName?: string } | null>(null);
@@ -178,9 +179,10 @@ const Chat: React.FC = () => {
           <div className="chat-header">
             <div className="user-details">
               <div className="d-xl-none">
-                <Link className="text-muted chat-close me-2" to="#">
+                <div className="text-muted chat-close me-2"
+                        onClick={() => navigate(-1)}>
                   <i className="fas fa-arrow-left" />
-                </Link>
+                </div>
               </div>
               <div className="avatar avatar-lg online flex-shrink-0">
                 <ImageWithBasePath

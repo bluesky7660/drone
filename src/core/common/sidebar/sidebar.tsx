@@ -10,7 +10,7 @@ import {  signOut } from "firebase/auth";
 import { auth } from '../../../firebase/firebase';
 import Cookies from 'js-cookie';
 
-const Sidebar = () => {
+const Sidebar1 = () => {
   const routes = all_routes;
   const location = useLocation();
   const dispatch = useDispatch();
@@ -248,4 +248,5 @@ const Sidebar = () => {
   );
 };
 
+const Sidebar = React.memo(Sidebar1);
 export default Sidebar;

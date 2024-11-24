@@ -21,12 +21,13 @@ import "../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; 
 import Mainapp from "./feature-module/router/router";
 import {MemberProvider} from '@context/memberContext';
+import 'swiper/css';
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={Store}>
     <HelmetProvider>
       <BrowserRouter basename={base_path} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -36,5 +37,5 @@ root.render(
       </BrowserRouter>
       </HelmetProvider>
     </Provider>
-  </React.StrictMode>
+  // </React.StrictMode>s
 );
