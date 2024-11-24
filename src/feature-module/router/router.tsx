@@ -20,9 +20,8 @@ const Mainapp: React.FC = () => {
   const [styleLoaded, setStyleLoaded] = useState<boolean>(false); // 타입 지정
 
   useEffect(() => {
-    if (styleLoaded) return; // 스타일이 이미 로드되었으면 return
-
-    setStyleLoaded(false);
+    if (styleLoaded) return;
+    setStyleLoaded(false); // Reset styleLoaded when pathname changes
 
     if (location.pathname.includes("/admin")) {
       import("../../style/admin/main.scss")
@@ -33,7 +32,7 @@ const Mainapp: React.FC = () => {
         .then(() => setStyleLoaded(true))
         .catch((err) => console.error("Main style load error: ", err));
     }
-  }, [location.pathname, styleLoaded]); 
+  }, [location.pathname, styleLoaded]);
 
   useEffect(() => {
     const checkSessionTimeout = () => {
