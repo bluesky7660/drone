@@ -20,7 +20,8 @@ import "../src/style/icon/feather/css/iconfont.css";
 import "../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; 
 import Mainapp from "./feature-module/router/router";
-import {MemberProvider} from '@context/memberContext';
+// import {MemberProvider} from '@context/memberContext';
+import CombinedProvider from '@context/combinedProvider';
 import 'swiper/css';
 
 const root = ReactDOM.createRoot(
@@ -31,9 +32,9 @@ root.render(
     <Provider store={Store}>
       <HelmetProvider>
         <BrowserRouter basename={base_path} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <MemberProvider>
+          <CombinedProvider>
             < Mainapp />
-          </MemberProvider>
+          </CombinedProvider>
         </BrowserRouter>
       </HelmetProvider>
     </Provider>

@@ -79,7 +79,7 @@ const MemberProvider: React.FC<MemberProviderProps> = ({ children }) => {
     const timeout = setTimeout(() => {
       Cookies.remove('user');
       dispatch({ type: 'LOGOUT' });
-    }, 30 * 60 * 1000); // 30분
+    },24 * 30 * 60 * 1000); // 30분
 
     return () => clearTimeout(timeout);
   }, []);
@@ -91,4 +91,4 @@ const MemberProvider: React.FC<MemberProviderProps> = ({ children }) => {
   );
 };
 
-export { MemberProvider, MemberContext, MemberContextType };
+export { MemberProvider, MemberContext, MemberContextType,Member };

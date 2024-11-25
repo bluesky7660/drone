@@ -8,7 +8,7 @@ import { firebaseDB, auth } from '../../firebase/firebase'; // Firebase auth 가
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import Cookies from 'js-cookie';
-import { uid } from 'chart.js/dist/helpers/helpers.core';
+// import { uid } from 'chart.js/dist/helpers/helpers.core';
 
 const Signin = () => {
   const routes = all_routes;
@@ -28,7 +28,7 @@ const Signin = () => {
       alert('이메일과 비밀번호를 입력하세요.');
       return;
     }
-
+    const startTime = performance.now();
     try {
       // Firebase로 로그인 처리
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -55,6 +55,7 @@ const Signin = () => {
           mmDelNy: userData.mmDelNy,
           mmEmail: userData.mmEmail,
           mmName: userData.mmName,
+          mmGender:userData.mmGender,
           mmNickName: userData.mmNickName,
           mmPassword: userData.mmPassword,
           mmPhoneNum: userData.mmPhoneNum,
@@ -65,9 +66,14 @@ const Signin = () => {
 
         // 쿠키에 로그인 정보 저장
         Cookies.set('user', JSON.stringify(memberData), { expires: 1 / 48, path: '/' });
+        // 끝 시간 기록
+        const endTime = performance.now();
+        const elapsedTime = ((endTime - startTime) / 1000).toFixed(2); // 초 단위로 변환
 
+        // alert(`로그인 처리 완료! 걸린 시간: ${elapsedTime}초`);
         // 로그인 성공 시 대시보드로 이동
         navigate(routes.index);
+        console.log(`로그인 처리 완료! 걸린 시간: ${elapsedTime}초`); 
       } else {
         alert('해당하는 계정이 존재하지 않습니다.');
       }

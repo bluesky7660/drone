@@ -13,7 +13,7 @@ const VideoCall = () => {
           <span className="model-icon bg-primary d-flex justify-content-center align-items-center rounded-circle me-2">
             <i className="ti ti-video" />
           </span>
-          <h4 className="modal-title">Video Calling...</h4>
+          <h4 className="modal-title">영상 통화</h4>
         </div>
         <div className="modal-body pb-0">
           <div className="card bg-light mb-0">
