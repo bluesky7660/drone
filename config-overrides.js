@@ -1,9 +1,6 @@
-const { overrideDevServer } = require('customize-cra');
+
 const path = require('path');
-const devServerConfig = () => (config) => {
-  config.port = 8083; // 원하는 포트 번호
-  return config;
-};
+
 module.exports = {
   webpack: function override(config) {
     // Webpack이 src 폴더를 기준으로 경로를 인식하도록 설정
@@ -22,5 +19,4 @@ module.exports = {
 
     return config;
   },
-  devServer: overrideDevServer(devServerConfig()),
 };

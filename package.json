@@ -1,8 +1,8 @@
 {
   "name": "dreamchat",
   "version": "0.1.0",
-  "homepage": "https://bluesky7660.github.io/drone/react/template/",
-  "private": true,
+  "homepage": "https://bluesky7660.github.io/drone",
+  "private": false,
   "dependencies": {
     "@daily-co/daily-js": "^0.73.0",
     "@fortawesome/fontawesome-free": "^6.6.0",
@@ -55,12 +55,12 @@
     "yet-another-react-lightbox": "^3.21.6"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

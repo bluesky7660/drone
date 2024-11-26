@@ -31,7 +31,7 @@ root.render(
   // <React.StrictMode>
     <Provider store={Store}>
       <HelmetProvider>
-        <BrowserRouter basename={base_path} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <BrowserRouter basename={process.env.PUBLIC_URL} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <CombinedProvider>
             < Mainapp />
           </CombinedProvider>

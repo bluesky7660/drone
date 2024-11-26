@@ -243,7 +243,7 @@ const ChatTab: React.FC = () => {
                       <Link to={`${routes.chat}/${chat.id}`} className="chat-status text-center">
                         <div className="avatar avatar-lg online d-block">
                           <ImageWithBasePath
-                            src={chat.avatar || "/assets/img/profiles/avatar-11.jpg"}
+                            src={chat.avatar || "assets/img/profiles/avatar-11.jpg"}
                             alt="프로필이미지"
                             className="rounded-circle"
                           />

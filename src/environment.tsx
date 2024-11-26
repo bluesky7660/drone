@@ -1,2 +1,2 @@
-export const base_path ='/drone/react/template'
-export const img_path ='/drone/react/template/'
+export const base_path ='/drone'
+export const img_path ='/drone/'
