@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/drone/react/template/static/css/main.c86fba7b.css",
-    "main.js": "/drone/react/template/static/js/main.317a989c.js",
+    "main.css": "/drone/react/template/static/css/main.646ed524.css",
+    "main.js": "/drone/react/template/static/js/main.1405bdfb.js",
     "static/css/303.c1d9dbee.chunk.css": "/drone/react/template/static/css/303.c1d9dbee.chunk.css",
     "static/js/303.e68e6f05.chunk.js": "/drone/react/template/static/js/303.e68e6f05.chunk.js",
     "static/css/918.75c28190.chunk.css": "/drone/react/template/static/css/918.75c28190.chunk.css",
@@ -40,7 +40,7 @@
     "static/media/fa-solid-900.woff2": "/drone/react/template/static/media/fa-solid-900.fb8184add5a3101ad0a3.woff2",
     "static/media/fa-brands-400.woff2": "/drone/react/template/static/media/fa-brands-400.8d3cabfc66809162fb4d.woff2",
     "static/media/boxicons.woff2": "/drone/react/template/static/media/boxicons.df635aaf04cd75132f62.woff2",
-    "static/media/fa-regular-400.ttf": "/drone/react/template/static/media/fa-regular-400.17a6e1aebccdbaa39e78.ttf",
+    "static/media/fa-regular-400.ttf": "/drone/react/template/static/media/fa-regular-400.adc51aab4d771ab65f81.ttf",
     "static/media/feather.eot?t=1525787366991": "/drone/react/template/static/media/feather.ba142c9a3d0f5747c347.eot",
     "static/media/feather.ttf?t=1525787366991": "/drone/react/template/static/media/feather.aaacbaee6c14b4207d39.ttf",
     "static/media/typicons.woff": "/drone/react/template/static/media/typicons.6df05c03e777fdac1d4c.woff",
@@ -51,10 +51,10 @@
     "static/media/fa-regular-400.woff2": "/drone/react/template/static/media/fa-regular-400.e931bc0d14f5bbb1da22.woff2",
     "static/media/bg-01.png": "/drone/react/template/static/media/bg-01.bc6546d073728e9a3a0f.png",
     "static/media/fa-v4compatibility.ttf": "/drone/react/template/static/media/fa-v4compatibility.2eb7b3ef25042305f3ff.ttf",
-    "static/media/fa-v4compatibility.woff2": "/drone/react/template/static/media/fa-v4compatibility.b3049b13a93f07e026fc.woff2",
+    "static/media/fa-v4compatibility.woff2": "/drone/react/template/static/media/fa-v4compatibility.c3ea317a0f10f201597f.woff2",
     "index.html": "/drone/react/template/index.html",
-    "main.c86fba7b.css.map": "/drone/react/template/static/css/main.c86fba7b.css.map",
-    "main.317a989c.js.map": "/drone/react/template/static/js/main.317a989c.js.map",
+    "main.646ed524.css.map": "/drone/react/template/static/css/main.646ed524.css.map",
+    "main.1405bdfb.js.map": "/drone/react/template/static/js/main.1405bdfb.js.map",
     "303.c1d9dbee.chunk.css.map": "/drone/react/template/static/css/303.c1d9dbee.chunk.css.map",
     "303.e68e6f05.chunk.js.map": "/drone/react/template/static/js/303.e68e6f05.chunk.js.map",
     "918.75c28190.chunk.css.map": "/drone/react/template/static/css/918.75c28190.chunk.css.map",
@@ -78,7 +78,7 @@
     "578.ae04295d.chunk.js.map": "/drone/react/template/static/js/578.ae04295d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c86fba7b.css",
-    "static/js/main.317a989c.js"
+    "static/css/main.646ed524.css",
+    "static/js/main.1405bdfb.js"
   ]
 }
