@@ -2,7 +2,7 @@
   "name": "dreamchat",
   "version": "0.1.0",
   "homepage": "https://bluesky7660.github.io/drone",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@daily-co/daily-js": "^0.73.0",
     "@fortawesome/fontawesome-free": "^6.6.0",
