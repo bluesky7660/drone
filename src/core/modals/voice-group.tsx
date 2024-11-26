@@ -8,6 +8,7 @@ const VoiceGroup = () => {
   const toggleMute = () => {
     setMuteMic(!muteMic);
   };
+  
   return (
     <>
       {/* Voice Call group */}
