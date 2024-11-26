@@ -1021,19 +1021,19 @@ const GroupChat = () => {
                               close={() => setOpen1(false)}
                               slides={[
                                 {
-                                  src: "/react/template/assets/img/gallery/gallery-02.jpg",
+                                  src: "/assets/img/gallery/gallery-02.jpg",
                                 },
                                 {
-                                  src: "/react/template/assets/img/gallery/gallery-03.jpg",
+                                  src: "/assets/img/gallery/gallery-03.jpg",
                                 },
                                 {
-                                  src: "/react/template/assets/img/gallery/gallery-01.jpg",
+                                  src: "/assets/img/gallery/gallery-01.jpg",
                                 },
                                 {
-                                  src: "/react/template/assets/img/gallery/gallery-04.jpg",
+                                  src: "/assets/img/gallery/gallery-04.jpg",
                                 },
                                 {
-                                  src: "/react/template/assets/img/gallery/gallery-05.jpg",
+                                  src: "/assets/img/gallery/gallery-05.jpg",
                                 },
                               ]}
                             />
