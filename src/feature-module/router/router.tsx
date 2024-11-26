@@ -10,7 +10,7 @@ import AdminAuthFeature from "../adminAuthFeature";
 import AdminLogin from "../admin/authentication/login";
 import PrivateRoute from "@router/PrivateRoute";
 import Cookies from "js-cookie";
-import { MemberContext, MemberContextType } from '@context/memberContext';
+// import { MemberContext, MemberContextType } from '@context/memberContext';
 
 const Mainapp: React.FC = () => {
   const location = useLocation();

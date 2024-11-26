@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import UploadFile from '../../../core/modals/upload-file-image'
 import NewStatus from '../../../core/modals/new-status'
 import ViewStatus from '../../../core/modals/view-status'
-import { Carousel } from 'react-bootstrap';
+// import { Carousel } from 'react-bootstrap';
 
 const MyStatus = () => {
   const [isPaused, setIsPaused] = useState(false);
