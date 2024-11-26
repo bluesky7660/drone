@@ -156,16 +156,16 @@ const GroupInfo = () => {
                           close={() => setOpen1(false)}
                           slides={[
                             {
-                              src: "/drone/assets/img/gallery/gallery-02.jpg",
+                              src: "/react/template/assets/img/gallery/gallery-02.jpg",
                             },
                             {
-                              src: "/drone/assets/img/gallery/gallery-03.jpg",
+                              src: "/react/template/assets/img/gallery/gallery-03.jpg",
                             },
                             {
-                              src: "/drone/assets/img/gallery/gallery-01.jpg",
+                              src: "/react/template/assets/img/gallery/gallery-01.jpg",
                             },
                             {
-                              src: "/drone/assets/img/gallery/gallery-04.jpg",
+                              src: "/react/template/assets/img/gallery/gallery-04.jpg",
                             },
                             {
                               src: "/drone/assets/img/gallery/gallery-05.jpg",
