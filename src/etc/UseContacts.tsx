@@ -5,6 +5,7 @@ import { firebaseDB } from '@firebaseApi/firebase';
 type Contact = {
     uid: string;
     name: string;
+    email: string;
     lastSeen: string;
     avatar: string;
 };
@@ -51,8 +52,9 @@ const SavedContacts = (currentUserId: string | null) => {
                     return {
                         uid: contactId,
                         name: contactData?.mmNickName||contactData?.mmName,
+                        email:contactData?.mmEmail,
                         lastSeen: contactData?.lastSeen || 'Unknown',
-                        avatar: contactData?.avatarUrl || '/assets/img/profiles/avatar-01.jpg', 
+                        avatar: contactData?.avatarUrl || 'assets/img/profiles/avatar-01.jpg', 
                         ...contactData,
                     };
                 }));
@@ -85,8 +87,9 @@ const SavedGroupContacts = (currentUserId: string | null) => {
                     return {
                         uid: contactId,
                         name: contactData?.mmNickName||contactData?.mmName,
+                        email:contactData?.mmEmail,
                         lastSeen: contactData?.lastSeen || 'Unknown',
-                        avatar: contactData?.avatarUrl || '/assets/img/profiles/avatar-01.jpg', 
+                        avatar: contactData?.avatarUrl || 'assets/img/profiles/avatar-01.jpg', 
                         ...contactData,
                     };
                 }));

@@ -1,8 +1,19 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import ImageWithBasePath from '../common/imageWithBasePath'
+import {SavedGroupContacts} from '@etc/UseContacts';
+import useAuth from '@/etc/UseAuth';
 
+type Contact = {
+  uid: string;
+  name: string;
+  email: string;
+  lastSeen: string;
+  avatar: string;
+};
 const NewCall = () => {
+  const {currentUserId} = useAuth();
+  const contacts = SavedGroupContacts(currentUserId);
   return (
     <>
     
@@ -11,7 +22,7 @@ const NewCall = () => {
     <div className="modal-dialog modal-dialog-centered">
       <div className="modal-content">
         <div className="modal-header">
-          <h4 className="modal-title">New Call</h4>
+          <h4 className="modal-title">새 통화</h4>
           <button
             type="button"
             className="btn-close"
@@ -35,156 +46,48 @@ const NewCall = () => {
                 </Link>
               </div>
             </div>
-            <h6 className="mb-3 fw-medium fs-16">Contacts</h6>
+            <h6 className="mb-3 fw-medium fs-16">연락처</h6>
             <div className="contact-scroll contact-select mb-3">
-              <div className="contact-user d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <div className="avatar avatar-lg">
-                    <ImageWithBasePath
-                      src="assets/img/profiles/avatar-06.jpg"
-                      className="rounded-circle"
-                      alt="image"
-                    />
-                  </div>
-                  <div className="ms-2">
-                    <h6>Edward Lietz</h6>
-                    <p>App Developer</p>
-                  </div>
+              {Object.keys(contacts).map((letter) => (
+                <div className="mb-4" key={letter}>
+                  <h6 className="mb-2">{letter}</h6>
+                  {contacts[letter].map((contact: Contact) => 
+                    // 현재 로그인한 유저 제외하고 목록에 보여주기
+                    (
+                    <Link className="contact-user d-flex align-items-center justify-content-between" to="#">
+                      <div className="d-flex align-items-center">
+                        <div className="avatar avatar-lg">
+                          <ImageWithBasePath
+                            src={contact.avatar}
+                            alt="프로필이미지"
+                            className="rounded-circle"
+                          />
+                        </div>
+                        <div className="contact-user-info">
+                          <div className="contact-user-msg">
+                            <h6>{contact.name}</h6>
+                            <small>{contact.email}</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="d-inline-flex">
+                        <a className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle me-2" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#voice_call" 
+                        href="/call">
+                          <span><i className="ti ti-phone"></i></span>
+                        </a>
+                          <a className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#video-call" 
+                          href="/call">
+                            <span><i className="ti ti-video"></i></span>
+                          </a>
+                        </div>
+                    </Link>
+                  ))}
                 </div>
-                <div className="d-inline-flex">
-                  <Link
-                    to="#"
-                    className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle me-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#voice_call"
-                  >
-                    <span>
-                      <i className="ti ti-phone" />
-                    </span>
-                  </Link>
-                  <Link
-                    to="#"
-                    className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle"
-                    data-bs-toggle="modal"
-                    data-bs-target="#video-call"
-                  >
-                    <span>
-                      <i className="ti ti-video" />
-                    </span>
-                  </Link>
-                </div>
-              </div>
-              <div className="contact-user d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <div className="avatar avatar-lg">
-                    <ImageWithBasePath
-                      src="assets/img/profiles/avatar-02.jpg"
-                      className="rounded-circle"
-                      alt="image"
-                    />
-                  </div>
-                  <div className="ms-2">
-                    <h6>Sarika Jain</h6>
-                    <p>UI/UX Designer</p>
-                  </div>
-                </div>
-                <div className="d-inline-flex">
-                  <Link
-                    to="#"
-                    className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle me-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#voice_call"
-                  >
-                    <span>
-                      <i className="ti ti-phone" />
-                    </span>
-                  </Link>
-                  <Link
-                    to="#"
-                    className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle"
-                    data-bs-toggle="modal"
-                    data-bs-target="#video-call"
-                  >
-                    <span>
-                      <i className="ti ti-video" />
-                    </span>
-                  </Link>
-                </div>
-              </div>
-              <div className="contact-user d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <div className="avatar avatar-lg">
-                    <ImageWithBasePath
-                      src="assets/img/profiles/avatar-03.jpg"
-                      className="rounded-circle"
-                      alt="image"
-                    />
-                  </div>
-                  <div className="ms-2">
-                    <h6>Clyde Smith</h6>
-                    <p>Web Developer</p>
-                  </div>
-                </div>
-                <div className="d-inline-flex">
-                  <Link
-                    to="#"
-                    className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle me-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#voice_call"
-                  >
-                    <span>
-                      <i className="ti ti-phone" />
-                    </span>
-                  </Link>
-                  <Link
-                    to="#"
-                    className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle"
-                    data-bs-toggle="modal"
-                    data-bs-target="#video-call"
-                  >
-                    <span>
-                      <i className="ti ti-video" />
-                    </span>
-                  </Link>
-                </div>
-              </div>
-              <div className="contact-user d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <div className="avatar avatar-lg">
-                    <ImageWithBasePath
-                      src="assets/img/profiles/avatar-04.jpg"
-                      className="rounded-circle"
-                      alt="image"
-                    />
-                  </div>
-                  <div className="ms-2">
-                    <h6>Carla Jenkins</h6>
-                    <p>Business Analyst</p>
-                  </div>
-                </div>
-                <div className="d-inline-flex">
-                  <Link
-                    to="#"
-                    className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle me-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#voice_call"
-                  >
-                    <span>
-                      <i className="ti ti-phone" />
-                    </span>
-                  </Link>
-                  <Link
-                    to="#"
-                    className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle"
-                    data-bs-toggle="modal"
-                    data-bs-target="#video-call"
-                  >
-                    <span>
-                      <i className="ti ti-video" />
-                    </span>
-                  </Link>
-                </div>
-              </div>
+                ))}
             </div>
           </form>
         </div>

@@ -42,6 +42,7 @@ const VideoCall = () => {
           </Link>
           <Link
             to="#"
+            data-bs-dismiss="modal"
             className="voice-icon btn btn-danger rounded-circle d-flex justify-content-center align-items-center"
           >
             <i className="ti ti-phone-off fs-20" />

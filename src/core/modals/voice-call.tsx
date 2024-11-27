@@ -42,7 +42,8 @@ const VoiceCall = () => {
           </Link>
           <Link
             to="#"
-            className="voice-icon btn btn-danger rounded-circle d-flex justify-content-center align-items-center"
+            data-bs-dismiss="modal"
+            className="voice-icon btn btn-danger call-decline rounded-circle d-flex justify-content-center align-items-center"
           >
             <i className="ti ti-phone-off fs-20" />
           </Link>
