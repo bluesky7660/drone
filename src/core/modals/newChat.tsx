@@ -118,7 +118,7 @@ const NewChat = () => {
                             type="checkbox"
                             name='chat_partner'
                             id={`saved-contact-${contact.uid}`}
-                            checked={selectedContact == contact.uid}
+                            checked={selectedContact === contact.uid}
                             onChange={() => handleContactSelect(contact.uid)}
                           />
                         </div>

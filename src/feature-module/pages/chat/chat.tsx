@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link,useNavigate } from "react-router-dom";
 import ImageWithBasePath from "../../../core/common/imageWithBasePath";
-import Lightbox from "yet-another-react-lightbox";
+// import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import ContactInfo from "../../../core/modals/contact-info-off-canva";
 import ContactFavourite from "../../../core/modals/contact-favourite-canva";
@@ -11,7 +11,7 @@ import MessageDelete from "../../../core/modals/message-delete";
 import { useParams } from 'react-router-dom';
 import { MemberContext } from '@context/memberContext';
 import { firebaseDB } from "@firebaseApi/firebase";
-import { getDoc ,getDocs, doc, collection, addDoc, onSnapshot, query, orderBy, Timestamp, updateDoc } from 'firebase/firestore';
+import { getDoc , doc, collection, addDoc, onSnapshot, query, orderBy, Timestamp, updateDoc } from 'firebase/firestore';
 import MessageInput from './MessageInput';
 import MessageList from './MessageList';
 
@@ -169,6 +169,26 @@ const Chat: React.FC = () => {
       fetchChatData();
     }
   }, [chatId]);
+  document.querySelectorAll(".chat-user-list").forEach(function (element) {
+    element.addEventListener("click", function () {
+      if (window.innerWidth <= 992) {
+        const showChat = document.querySelector(".chat-messages");
+        if (showChat) {
+          showChat.classList.add("show");
+        }
+      }
+    });
+  });
+  document.querySelectorAll(".chat-close").forEach(function (element) {
+    element.addEventListener("click", function () {
+      if (window.innerWidth <= 992) {
+        const hideChat = document.querySelector(".chat-messages");
+        if (hideChat) {
+          hideChat.classList.remove("show");
+        }
+      }
+    });
+  });
   
   
   return (
@@ -179,10 +199,12 @@ const Chat: React.FC = () => {
           <div className="chat-header">
             <div className="user-details">
               <div className="d-xl-none">
-                <div className="text-muted chat-close me-2"
-                        onClick={() => navigate(-1)}>
+                {/* <div className="text-muted chat-close me-2"
+                        onClick={() => navigate('/index')}> */}
+                <Link className="text-muted chat-close me-2" to="#">
                   <i className="fas fa-arrow-left" />
-                </div>
+                </Link>
+                {/* </div> */}
               </div>
               <div className="avatar avatar-lg online flex-shrink-0">
                 <ImageWithBasePath

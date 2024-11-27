@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState} from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { adminAuth, adminRoutes, authRoutes, publicRoutes } from "./router.link";
 import Feature from "../feature";
@@ -45,7 +45,7 @@ const Mainapp: React.FC = () => {
       
       if (userData) {
         const lastActivity = userData.lastActivity || currentTime;
-        const sessionTimeout = 30 * 60 * 1000; // 30분 = 30 * 60 * 1000ms
+        const sessionTimeout = 24 * 30 * 60 * 1000; // 30분 = 30 * 60 * 1000ms
         
         if (currentTime - lastActivity > sessionTimeout) {
           alert('세션이 만료되었습니다. 다시 로그인하세요.');

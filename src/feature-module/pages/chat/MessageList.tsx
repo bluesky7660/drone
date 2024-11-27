@@ -25,10 +25,16 @@ const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEm
     const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
     const textRefs = useRef<(HTMLParagraphElement | null)[]>([]);
     const [isCopied, setIsCopied] = useState(false);
+    const [isFirstRender, setIsFirstRender] = useState(true);
     useEffect(() => {
-        if (endOfMessagesRef.current) {
-          endOfMessagesRef.current.scrollIntoView({ behavior: "smooth" });
+        if(isFirstRender && endOfMessagesRef.current){
+            endOfMessagesRef.current.scrollIntoView({ behavior: "auto" });
+        }else{
+            if (endOfMessagesRef.current) {
+                endOfMessagesRef.current.scrollIntoView({ behavior: "smooth" });
+            }
         }
+        
     }, [messages]);
 
     const handleCopy = (index:number) => {

@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ImageWithBasePath from "../../../../core/common/imageWithBasePath";
-import CustomSelect from "../select/commonSelect";
-import { CountryOptions } from "../../core/data/json/selectOption";
+// import ImageWithBasePath from "../../../../core/common/imageWithBasePath";
+// import CustomSelect from "../select/commonSelect";
+// import { CountryOptions } from "../../core/data/json/selectOption";
 
 const ChatSettingsModal = () => {
   return (

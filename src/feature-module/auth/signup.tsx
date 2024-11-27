@@ -5,7 +5,7 @@ import { all_routes } from '../router/all_routes';
 import { DatePicker } from 'antd';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { setDoc, doc } from 'firebase/firestore';
-import { auth, MEMBER_COLLECTION, firebaseDB } from '../../firebase/firebase';
+import { auth, MEMBER_COLLECTION, } from '@firebaseApi/firebase';
 import { FirebaseError } from 'firebase/app';
 import type { DatePickerProps } from 'antd';
 import ImageWithBasePath from '../../core/common/imageWithBasePath';

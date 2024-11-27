@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useContext } from 'react';
+import React, { useState, useEffect ,useContext, useCallback } from 'react';
 import ImageWithBasePath from '../imageWithBasePath'
 import { Link,useNavigate } from 'react-router-dom'
 import { all_routes } from '../../../feature-module/router/all_routes'
@@ -19,7 +19,7 @@ const ChatTab: React.FC = () => {
   const { state } = useContext(MemberContext);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchInitialChats = async () => {
+  const fetchInitialChats = useCallback(async () => {
     if (!state) return;
     setLoading(true);
     const q = query(collection(firebaseDB, "chatRooms"), where("participants", "array-contains", state.uid));
@@ -35,7 +35,7 @@ const ChatTab: React.FC = () => {
         return {
           uid: userData?.uid,
           mmNickName: userData?.mmNickName || userData?.mmName || "Unknown User",
-          avatar: userData?.avatar || "/assets/img/profiles/avatar-11.jpg",
+          avatar: userData?.avatar || "assets/img/profiles/avatar-11.jpg",
         };
       });
 
@@ -68,12 +68,12 @@ const ChatTab: React.FC = () => {
 
     setChatList(initialChats); // 상태 갱신
     setLoading(false);
-  };
+  }, [state]);
   useEffect(() => {
     if (state) {
       fetchInitialChats(); //초기
     }
-  }, [state]);
+  }, [state,fetchInitialChats]);
   useEffect(() => {
     if (!state) return;
     setLoading(true);
@@ -364,7 +364,7 @@ const ChatTab: React.FC = () => {
                     {chatList.length > 0 ? (
                   chatList.map((chat) => (
                     <div className="chat-list" key={chat.id}>
-                      <div onClick={() => navigate(`${routes.chat}/${chat.id}`)} className="chat-user-list">
+                      <Link  className="chat-user-list" to={`${routes.chat}/${chat.id}`}>
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src={chat.avatar || "/assets/img/profiles/avatar-11.jpg"}
@@ -390,7 +390,7 @@ const ChatTab: React.FC = () => {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                       <div className="chat-dropdown">
                         <Link className="#" to="#" data-bs-toggle="dropdown">
                           <i className="ti ti-dots-vertical" />

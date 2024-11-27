@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ImageWithBasePath from "../imageWithBasePath";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -18,7 +18,7 @@ const Sidebar = React.memo(() => {
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode"));
   // const { dispatch: memberDispatch } = useContext(MemberContext);
 
-  const LayoutDark = () => {
+  const LayoutDark = useCallback(() => {
     if (darkMode === "enabled") {
       localStorage.setItem("darkMode", "enabled");
       dispatch(setDark(true));
@@ -28,11 +28,11 @@ const Sidebar = React.memo(() => {
       dispatch(setDark(false));
       setDarkMode("disabled");
     }
-  };
+  }, [darkMode, dispatch]);
   useEffect(() => {
     setDarkMode(localStorage.getItem("darkMode"));
     LayoutDark();
-  }, [darkMode]);
+  }, [LayoutDark]);
 
   // 로그아웃 처리 함수
   const handleLogout = async () => {
