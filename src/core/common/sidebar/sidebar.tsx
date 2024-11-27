@@ -85,7 +85,7 @@ const Sidebar = React.memo(() => {
               <Tooltip title="Contacts" placement="right" color={"#6338F6 "}>
                 <li>
                   <Link
-                    to="#"
+                    to={routes.chat}
                     data-bs-toggle="tab"
                     data-bs-target="#contact-menu"
                   >
@@ -96,7 +96,7 @@ const Sidebar = React.memo(() => {
               <Tooltip title="Group" placement="right" color={"#6338F6 "}>
                 <li>
                   <Link
-                    to="#"
+                    to={routes.groupChat}
                     className={
                       location.pathname.includes(routes.groupChat)
                         ? "active"
@@ -157,9 +157,11 @@ const Sidebar = React.memo(() => {
               <Tooltip title="Calls" placement="right" color={"#6338F6 "}>
                 <li>
                   <Link
-                    to="#"
+                    onClick={() => navigate(routes.allCalls)}
+                    to={routes.allCalls}
                     className={
-                      location.pathname.includes(routes.allCalls)
+                      location.pathname.includes(routes.allCalls)||
+                      location.pathname.includes(routes.call)
                         ? "active"
                         : ""
                     }

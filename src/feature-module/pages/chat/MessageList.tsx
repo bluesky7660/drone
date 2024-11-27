@@ -21,17 +21,25 @@ interface MessageListProps {
   currentUserId: string; // 현재 로그인한 사용자의 ID
 }
 
+interface RenderMessageProps {
+    message: string;
+}
+
 const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEmoji, currentUserId }) => {
     const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
     const textRefs = useRef<(HTMLParagraphElement | null)[]>([]);
     const [isCopied, setIsCopied] = useState(false);
     const [isFirstRender, setIsFirstRender] = useState(true);
+    const [isSend, setIsSend] = useState(false);
     useEffect(() => {
         if(isFirstRender && endOfMessagesRef.current){
             endOfMessagesRef.current.scrollIntoView({ behavior: "auto" });
-        }else{
-            if (endOfMessagesRef.current) {
+            setIsFirstRender(false);
+        }else if(endOfMessagesRef.current){
+            if (endOfMessagesRef.current && isSend) {
                 endOfMessagesRef.current.scrollIntoView({ behavior: "smooth" });
+            }else if(isSend==false){
+                endOfMessagesRef.current.scrollIntoView({ behavior: "auto" });
             }
         }
         
@@ -48,16 +56,18 @@ const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEm
           }, 2000); 
         }
     };
-    const renderMessage = (message: string) => {
-        const formattedMessage = message.split('\n').map((line, index) => (
-            <React.Fragment key={index}>
-                {line}
-                <br /> {/* 줄바꿈을 <br />로 변환 */}
+    const RenderMessage = React.memo(({ message }: RenderMessageProps) => {
+        return (
+            <React.Fragment>
+                {message.split('\n').map((line, index) => (
+                    <React.Fragment key={index}>
+                        {line}
+                        <br />
+                    </React.Fragment>
+                ))}
             </React.Fragment>
-        ));
-    
-        return formattedMessage;
-    };
+        );
+    });
 
     return (
         <Scrollbars
@@ -98,7 +108,9 @@ const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEm
                         </div>
                         <div className="chat-info">
                             <div className="message-content">
-                                <p className="mb-0" ref={(el) => textRefs.current[index] = el}>{renderMessage(message.text)}</p>
+                                <p className="mb-0" ref={(el) => textRefs.current[index] = el}>
+                                    <RenderMessage message={message.text} />
+                                </p>
                                 <div className="emoj-group">
                                     <ul>
                                         <li className="emoj-action">

@@ -12,9 +12,11 @@ export const all_routes = {
   chat: "/chat",
   groupChat: "/group-chat",
   allCalls: "/all-calls",
+  call:"/call",
   status: "/status",
   myStatus: "/my-status",
   userStatus: "/user-status",
+  
   //Admin Pages
   dashboard: "/admin/index",
 

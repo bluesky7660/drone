@@ -92,31 +92,40 @@ const Chat: React.FC = () => {
     const chatQuery = query(chatRef, orderBy("createdAt", "asc"));
 
     onSnapshot(chatQuery, async (snapshot) => {
-      const messagesData: Message[] = [];
+      const messagesData: Message[] = await Promise.all(snapshot.docs.map(async (doc) => {;
 
-      for (const doc of snapshot.docs) {
+        // for (const doc of snapshot.docs) {
+        //   const messageData = doc.data() as Message;
+        //   console.log("senderid:",messageData.senderId);
+        //   const senderName = await fetchSenderName(messageData.senderId);
+        //   console.log("senderName:",senderName);
+        //   // try {
+            
+        //   //     const senderRef = doc(firebaseDB, "member", messageData.senderId);
+        //   //     const senderDoc = await getDoc(senderRef);
+        //   //     senderName = senderDoc.exists() ? senderDoc.data()?.mmName || null : null;
+            
+        //   // } catch (error) {
+        //   //   console.error(`Sender 데이터를 가져오는 중 오류 발생: ${error}`);
+        //   // }
+          
+
+        //   console.log("senderName:",otherUser?.mmNickName+" || "+otherUser?.mmName);
+        //   messagesData.push({
+        //     ...messageData,
+        //     senderName,
+        //   });
+        //   console.log("id:",messageData.id);
+        //}
         const messageData = doc.data() as Message;
-        console.log("senderid:",messageData.senderId);
         const senderName = await fetchSenderName(messageData.senderId);
-        console.log("senderName:",senderName);
-        // try {
-          
-        //     const senderRef = doc(firebaseDB, "member", messageData.senderId);
-        //     const senderDoc = await getDoc(senderRef);
-        //     senderName = senderDoc.exists() ? senderDoc.data()?.mmName || null : null;
-          
-        // } catch (error) {
-        //   console.error(`Sender 데이터를 가져오는 중 오류 발생: ${error}`);
-        // }
-        
 
-        console.log("senderName:",otherUser?.mmNickName+" || "+otherUser?.mmName);
-        messagesData.push({
-          ...messageData,
-          senderName,
-        });
-        console.log("id:",messageData.id);
-      }
+        return {
+            ...messageData,
+            senderName,
+        };
+        
+      }));
       setMessages(messagesData);
       
     });
@@ -169,7 +178,7 @@ const Chat: React.FC = () => {
       fetchChatData();
     }
   }, [chatId]);
-  document.querySelectorAll(".chat-user-list").forEach(function (element) {
+  document.querySelectorAll(".chat_room").forEach(function (element) {
     element.addEventListener("click", function () {
       if (window.innerWidth <= 992) {
         const showChat = document.querySelector(".chat-messages");
@@ -201,7 +210,7 @@ const Chat: React.FC = () => {
               <div className="d-xl-none">
                 {/* <div className="text-muted chat-close me-2"
                         onClick={() => navigate('/index')}> */}
-                <Link className="text-muted chat-close me-2" to="#">
+                <Link className="text-muted chat-close me-2 p-2" to="#">
                   <i className="fas fa-arrow-left" />
                 </Link>
                 {/* </div> */}

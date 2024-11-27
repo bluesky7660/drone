@@ -150,7 +150,7 @@ export const CallTab = () => {
                 >
                   <div className="chat-users-wrap">
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-06.jpg"
@@ -176,7 +176,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-01.jpg"
@@ -202,7 +202,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-05.jpg"
@@ -228,7 +228,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-03.jpg"
@@ -254,7 +254,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-04.jpg"
@@ -280,7 +280,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-02.jpg"
@@ -306,7 +306,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg bg-purple offline avatar-rounded me-2">
                           <span className="avatar-title fs-14 fw-medium">
                             AG
@@ -330,7 +330,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-10.jpg"
@@ -365,7 +365,7 @@ export const CallTab = () => {
                 >
                   <div className="chat-users-wrap">
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-06.jpg"
@@ -391,7 +391,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-01.jpg"
@@ -417,7 +417,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-05.jpg"
@@ -443,7 +443,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-03.jpg"
@@ -469,7 +469,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-04.jpg"
@@ -495,7 +495,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-02.jpg"
@@ -521,7 +521,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg bg-purple avatar-rounded me-2">
                           <span className="avatar-title fs-14 fw-medium">
                             AG
@@ -545,7 +545,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-10.jpg"
@@ -580,7 +580,7 @@ export const CallTab = () => {
                 >
                   <div className="chat-users-wrap">
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-06.jpg"
@@ -606,7 +606,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-01.jpg"
@@ -632,7 +632,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-05.jpg"
@@ -658,7 +658,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-03.jpg"
@@ -684,7 +684,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-04.jpg"
@@ -710,7 +710,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-02.jpg"
@@ -736,7 +736,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg bg-purple avatar-rounded me-2">
                           <span className="avatar-title fs-14 fw-medium">
                             AG
@@ -760,7 +760,7 @@ export const CallTab = () => {
                       </Link>
                     </div>
                     <div className="chat-list">
-                      <Link to={routes.allCalls} className="chat-user-list">
+                      <Link to={routes.call} className="chat-user-list">
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src="assets/img/profiles/avatar-10.jpg"

@@ -91,7 +91,7 @@ const ChatTab: React.FC = () => {
             return {
               uid: userData?.uid,
               mmNickName: userData?.mmNickName || userData?.mmName || "Unknown User",
-              avatar: userData?.avatar || "/assets/img/profiles/avatar-11.jpg",
+              avatar: userData?.avatar || "assets/img/profiles/avatar-11.jpg",
             };
           });
   
@@ -240,7 +240,7 @@ const ChatTab: React.FC = () => {
                     >
                     {chatList.length > 0 ? (
                   chatList.map((chat) => (<SwiperSlide key={chat.id}>
-                      <Link to={`${routes.chat}/${chat.id}`} className="chat-status text-center">
+                      <Link to={`${routes.chat}/${chat.id}`} className="chat-status text-center chat_room">
                         <div className="avatar avatar-lg online d-block">
                           <ImageWithBasePath
                             src={chat.avatar || "assets/img/profiles/avatar-11.jpg"}
@@ -364,7 +364,7 @@ const ChatTab: React.FC = () => {
                     {chatList.length > 0 ? (
                   chatList.map((chat) => (
                     <div className="chat-list" key={chat.id}>
-                      <Link  className="chat-user-list" to={`${routes.chat}/${chat.id}`}>
+                      <Link  className="chat-user-list chat_room" to={`${routes.chat}/${chat.id}`}>
                         <div className="avatar avatar-lg online me-2">
                           <ImageWithBasePath
                             src={chat.avatar || "/assets/img/profiles/avatar-11.jpg"}

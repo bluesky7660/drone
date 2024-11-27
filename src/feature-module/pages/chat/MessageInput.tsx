@@ -8,6 +8,7 @@ interface MessageInputProps {
 const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   const [newMessage, setNewMessage] = useState('');
   const [showEmoji, setShowEmoji] = useState<{ [key: number]: boolean }>({});
+  const [isSend, setIsSend] = useState(false);
 
   // 엔터키로 메시지 전송, Alt+Enter로 줄바꿈
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -33,7 +34,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
     if (newMessage.trim() === '') return; // 비어있는 메시지는 전송하지 않음
     // console.log("newMessage.trim():",newMessage.trim());
     onSendMessage(newMessage); // 상위 컴포넌트로 메시지 전송
-
+    setIsSend(true);
     setNewMessage(''); // 입력창 비우기
     const textArea = document.querySelector('#inputChat') as HTMLTextAreaElement;
     if (textArea) {
@@ -81,7 +82,9 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
                 style={{
                     resize: 'none', // 사용자가 크기를 조절할 수 없도록 함
                     overflowY: 'auto', // 스크롤 가능하도록 함
-                    maxHeight: '80px' // 최대 높이 3줄(각각 약 40px)로 제한
+                    maxHeight: '80px', // 최대 높이 3줄(각각 약 40px)로 제한
+                    minHeight: '38px',
+                    height:'38px'
                 }}
             />
           </div>

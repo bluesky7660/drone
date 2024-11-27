@@ -44,7 +44,7 @@ const ChatSidebar = () => {
           {/* /Profile */}
           {/* Calls */}
           <div className={`tab-pane fade ${
-              location.pathname.includes(routes.allCalls) ? "active show" : ""
+              location.pathname.includes(routes.allCalls)||location.pathname.includes(routes.call) ? "active show" : ""
             }`} id="call-menu">
             <CallTab />
           </div>

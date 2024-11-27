@@ -9,11 +9,13 @@ import ResetPassword from "../auth/resetPassword";
 import Otp from "../auth/otp";
 import Success from "../auth/success";
 import Chat from "../pages/chat/chat";
+import ChatTab from "../pages/chat/chat";
 import GroupChat from "../pages/group-chat/groupChat";
 import Status from "../pages/status/status";
 import MyStatus from "../pages/status/myStatus";
 import UserStatus from "../pages/status/userStatus";
 import AllCalls from "../pages/calls/allCalls";
+import Call from "../pages/calls/call";
 import AdminLogin from "../admin/authentication/login";
 import { AdminDashboard } from "../admin/pages/dashboard/adminDashboard";
 import ClipBoard from "../uiInterface/advanced-ui/clipboard";
@@ -165,6 +167,12 @@ export const publicRoutes = [
   {
     path: route.allCalls,
     element: <AllCalls />,
+    route: Route,
+    title:'Calls'
+  },
+  {
+    path: route.call,
+    element: <Call />,
     route: Route,
     title:'Calls'
   },
