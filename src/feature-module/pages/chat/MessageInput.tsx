@@ -20,7 +20,6 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
       setNewMessage(newMessage + '\n');  // Alt+Enter로 줄바꿈 추가
     }
   };
-
   // 메시지 입력값 변경 처리
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewMessage(e.target.value);
