@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import { MemberContext } from '@context/memberContext';
 import { firebaseDB } from "@firebaseApi/firebase";
 import { getDoc , doc, collection, addDoc, onSnapshot, query, orderBy, Timestamp, updateDoc } from 'firebase/firestore';
+import axios from 'axios';
 import MessageInput from './MessageInput';
 import MessageList from './MessageList';
 
@@ -30,7 +31,7 @@ const Chat: React.FC = () => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
-  const [otherUser, setOtherUser] = useState<{ uid: string; mmName: string; mmNickName?: string } | null>(null);
+  const [otherChatUser, setOtherChatUser] = useState<{ uid: string; mmName: string; mmNickName?: string } | null>(null);
   const [showSearch, setShowSearch] = useState(false);
   const [showEmoji, setShowEmoji] = useState<boolean[]>([]);
 
@@ -58,7 +59,7 @@ const Chat: React.FC = () => {
 
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          setOtherUser({uid:otherUserId, mmName: userData.mmName, mmNickName: userData.mmNickName });
+          setOtherChatUser({uid:otherUserId, mmName: userData.mmName, mmNickName: userData.mmNickName });
         }
       }
     } catch (error) {
@@ -110,7 +111,7 @@ const Chat: React.FC = () => {
         //   // }
           
 
-        //   console.log("senderName:",otherUser?.mmNickName+" || "+otherUser?.mmName);
+        //   console.log("senderName:",otherChatUser?.mmNickName+" || "+otherChatUser?.mmName);
         //   messagesData.push({
         //     ...messageData,
         //     senderName,
@@ -148,8 +149,46 @@ const Chat: React.FC = () => {
       };
 
       await addDoc(messageRef, newMessage);
-      console.log("otherUser",otherUser?.uid);
+      console.log("otherChatUser",otherChatUser?.uid);
+      // OpenAI API 호출하여 답변 생성
+      try {
+        const response = await axios.post(
+          'https://api.openai.com/v1/chat/completions',
+          {
+            model: 'gpt-3.5-turbo',
+            messages: [
+              { role: 'user', content: message }
+            ]
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+            }
+          }
+        );
 
+        const aiResponse = response.data.choices[0].message.content;
+
+        // AI의 답변 Firestore에 추가
+        const aiMessage = {
+          createdAt: Timestamp.now(),
+          senderId: otherChatUser?.uid, // AI가 보낸 답변을 상대방 ID로 설정
+          text: aiResponse,
+          isRead: true,
+          isOpenAI: true, // AI의 메시지임을 구분
+        };
+        await addDoc(messageRef, aiMessage);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          // Axios 에러의 경우
+          console.error("OpenAI API 호출 중 네트워크 오류 발생:", error.message);
+          alert("AI 응답을 가져오는 중 오류가 발생했습니다. 다시 시도해 주세요.");
+        } else {
+          // 예상치 못한 오류 처리
+          console.error("예상치 못한 오류 발생:", error);
+        }
+      }
       const chatRoomRef = doc(firebaseDB, "chatRooms", chatId);
 
       await updateDoc(chatRoomRef, {
@@ -225,7 +264,7 @@ const Chat: React.FC = () => {
                 />
               </div>
               <div className="ms-2 overflow-hidden">
-                <h6>{otherUser?.mmNickName || otherUser?.mmName}</h6>{/* 채팅유저이름 */}
+                <h6>{otherChatUser?.mmNickName || otherChatUser?.mmName}</h6>{/* 채팅유저이름 */}
                 <span className="last-seen">Online</span>{/* 채팅유저 상태 */}
               </div>
             </div>

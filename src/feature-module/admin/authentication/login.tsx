@@ -32,19 +32,19 @@ const AdminLogin = () => {
             <div className="log-auth">
               <div className="login-auth-wrap">
                 <div className="login-content-head">
-                  <h3>Login</h3>
+                  <h3>관리자 로그인</h3>
                 </div>
               </div>
               <form>
                 <div className="form-group">
                   <label className="form-label">
-                    Username <span>*</span>
+                    유저이름 <span>*</span>
                   </label>
                   <input type="email" className="form-control" />
                 </div>
                 <div className="form-group">
                   <label className="form-label">
-                    Password <span>*</span>
+                    패스워드 <span>*</span>
                   </label>
                   <div className="pass-group">
                     <input
@@ -75,7 +75,7 @@ const AdminLogin = () => {
                   to={routes.dashboard}
                   className="btn btn-primary w-100 btn-size justify-content-center"
                 >
-                  Login
+                  로그인
                 </Link>
               </form>
             </div>

@@ -901,7 +901,7 @@ const SettingsTab = () => {
               </div>
               {/* /Notification setting */}
               {/* Language setting */}
-              <div className="content-wrapper">
+              {/* <div className="content-wrapper">
                 <h5 className="sub-title">Language</h5>
                 <div className="chat-file">
                   <div className="file-item ">
@@ -947,7 +947,7 @@ const SettingsTab = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
               {/* /Language setting */}
               {/* Manage Device */}
               <div className="content-wrapper">

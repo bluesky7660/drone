@@ -115,4 +115,4 @@ const SavedGroupContacts = (currentUserId: string | null) => {
 };
 
 
-export {AllContacts,SavedContacts,SavedGroupContacts};
+export {AllContacts,SavedContacts,SavedGroupContacts,Contact};

@@ -1,19 +1,22 @@
-import React from 'react'
+import React ,{useState}from 'react'
 import { Link } from 'react-router-dom'
 import ImageWithBasePath from '../common/imageWithBasePath'
-import {SavedGroupContacts} from '@etc/UseContacts';
+import {SavedGroupContacts,Contact} from '@etc/UseContacts';
+import {useContact} from '@context/contactContext';
 import useAuth from '@/etc/UseAuth';
+import StartVideoCall from './start-video-call'
 
-type Contact = {
-  uid: string;
-  name: string;
-  email: string;
-  lastSeen: string;
-  avatar: string;
-};
+// type Contact = {
+//   uid: string;
+//   name: string;
+//   email: string;
+//   lastSeen: string;
+//   avatar: string;
+// };
 const NewCall = () => {
   const {currentUserId} = useAuth();
   const contacts = SavedGroupContacts(currentUserId);
+  const { selectedContact, setSelectedContact } = useContact();
   return (
     <>
     
@@ -73,17 +76,23 @@ const NewCall = () => {
                       <div className="d-inline-flex">
                         <a className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle me-2" 
                         data-bs-toggle="modal" 
-                        data-bs-target="#voice_call" 
+                        data-bs-target="#voice_attend" 
+                        onClick={() => {
+                          setSelectedContact(contact.uid); // 클릭 시 선택된 연락처 상태 업데이트
+                        }}
                         href="/call">
                           <span><i className="ti ti-phone"></i></span>
                         </a>
-                          <a className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle" 
-                          data-bs-toggle="modal" 
-                          data-bs-target="#video-call" 
-                          href="/call">
-                            <span><i className="ti ti-video"></i></span>
-                          </a>
-                        </div>
+                        <a className="model-icon bg-light d-flex justify-content-center align-items-center rounded-circle" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#start-video-call" 
+                        onClick={() => {
+                          setSelectedContact(contact.uid); // 클릭 시 선택된 연락처 상태 업데이트
+                        }}
+                        href="/call">
+                          <span><i className="ti ti-video"></i></span>
+                        </a>
+                      </div>
                     </Link>
                   ))}
                 </div>
@@ -94,6 +103,7 @@ const NewCall = () => {
       </div>
     </div>
   </div>
+  {selectedContact && <StartVideoCall selectedContact={selectedContact} />}
   {/* /Add Call */}</>
   )
 }

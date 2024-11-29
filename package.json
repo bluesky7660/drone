@@ -16,6 +16,7 @@
     "@types/react-helmet": "^6.1.11",
     "@types/react-redux": "^7.1.33",
     "antd": "^5.20.6",
+    "axios": "^1.7.8",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.4",
     "clipboard-copy": "^4.0.1",

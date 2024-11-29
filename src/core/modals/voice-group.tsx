@@ -39,7 +39,7 @@ const VoiceGroup = () => {
                     </span>
                     <Link
                       to="#"
-                      data-bs-toggle="modal"
+                      data-bs-dismiss="modal"
                       className="badge badge-danger badge-sm"
                     >
                       Leave

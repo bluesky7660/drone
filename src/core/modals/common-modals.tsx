@@ -16,8 +16,10 @@ import ContactDetails from './contact-details'
 import EditContact from './edit-contact'
 import InviteModal from './invite-modal'
 import MuteNotification from './mute-notification'
+import { useContact } from '@context/contactContext';
 
 const CommonModals = () => {
+  const { selectedContact, setSelectedContact } = useContact();
   return (
     <>
     <NewChat/>
@@ -26,7 +28,7 @@ const CommonModals = () => {
     <DeleteAccount/>
     <VideoCall/>
     <VideoGroup/>
-    <StartVideoCall/>
+    <StartVideoCall selectedContact={selectedContact} />
     <VoiceAttend/>
     <VoiceCall/>
     <VoiceGroup/>

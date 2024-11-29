@@ -482,3 +482,14 @@ label.contact-user{
 .chat .chat-body .messages .chats.chats-right div.chat-avatar{
   padding-left: 20px;
 }
+.modal-side{
+  width: 300px;
+  padding: 10px;
+  position: relative;
+}
+.modal-inner{
+  width: calc(100% - 300px);
+}
+.chat-section{
+  height: 100%;
+}

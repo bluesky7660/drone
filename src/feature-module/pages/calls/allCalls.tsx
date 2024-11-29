@@ -2,6 +2,9 @@ import React, {  useContext } from 'react';
 import ImageWithBasePath from '../../../core/common/imageWithBasePath'
 import { MemberContext } from '@context/memberContext'
 import { Link } from 'react-router-dom'
+import BlockUser from '../../../core/modals/block-user';
+import ClearCalls from '../../../core/modals/clear-calls';
+import NewCall from '../../../core/modals/new-call';
 
 const AllCalls = () => {
   const { state } = useContext(MemberContext)!;
@@ -40,6 +43,9 @@ const AllCalls = () => {
       </Link>
     </div>
   </div>
+  <BlockUser/>
+  <NewCall/>
+  <ClearCalls/>
   {/* /Chat */}
 </>
 

@@ -113,7 +113,7 @@ const AdminHeader = () => {
               </Link>
             </div>
           </div>
-          <div className="dropdown">
+          {/* <div className="dropdown">
             <Link
               to="#"
               className="header-icon flag-icon"
@@ -180,7 +180,7 @@ const AdminHeader = () => {
                 German
               </Link>
             </div>
-          </div>
+          </div> */}
           <div className="provider-head-links">
             <Link
               to={routes.chats}
