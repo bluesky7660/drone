@@ -28,7 +28,7 @@ const DeleteChat = () => {
               <p className="text-grya-9">
                 Clearing or deleting entire chats will only remove messages from
                 this device and your devices on the newer versions of
-                DreamsChat.
+                Kallaris.
               </p>
             </div>
             <div className="row g-3">

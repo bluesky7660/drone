@@ -158,7 +158,7 @@ const ChatTab: React.FC = () => {
                     to="#"
                     data-bs-toggle="modal"
                     data-bs-target="#new-chat"
-                    className="add-icon btn btn-primary p-0 d-flex align-items-center justify-content-center fs-16 me-2"
+                    className="add-icon btnf btn-primary p-0 d-flex align-items-center justify-content-center s-16 me-2"
                   >
                     <i className="ti ti-plus" />
                   </Link>

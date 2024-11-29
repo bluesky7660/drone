@@ -110,7 +110,7 @@ const ContactInfo = () => {
                   <li className="list-group-item">
                     <div className="info">
                       <h6>Bio</h6>
-                      <p>Hello, I am using DreamsChat</p>
+                      <p>Hello, I am using Kallaris</p>
                     </div>
                     <div className="icon">
                       <i className="ti ti-user-check" />

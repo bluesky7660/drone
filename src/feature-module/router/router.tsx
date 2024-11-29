@@ -63,7 +63,7 @@ const Mainapp: React.FC = () => {
   const currentRoute = publicRoutes.find(route => route.path === location.pathname) || 
                        authRoutes.find(route => route.path === location.pathname);
                        
-  const fullTitle = currentRoute?.title ? `${currentRoute.title} - DreamsChat` : "DreamsChat";
+  const fullTitle = currentRoute?.title ? `${currentRoute.title} - Kallaris` : "Kallaris";
   
   useEffect(() => {
     document.title = fullTitle;

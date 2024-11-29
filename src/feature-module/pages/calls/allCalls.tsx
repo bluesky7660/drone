@@ -28,7 +28,7 @@ const AllCalls = () => {
           />
         </h6>
       </div>
-      <p>대화할 사람이나 그룹을 선택하세요.</p>
+      <p>통화할 사람이나 그룹을 선택하세요.</p>
       <Link
         to="#"
         className="btn btn-primary"

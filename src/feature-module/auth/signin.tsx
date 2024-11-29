@@ -166,10 +166,10 @@ const Signin = () => {
                               로그인
                             </button>
                           </div>
-                          <div className="login-or mb-3">
+                          {/* <div className="login-or mb-3">
                             <span className="span-or">소셜 로그인</span>
-                          </div>
-                          <div className="d-flex align-items-center justify-content-center flex-wrap">
+                          </div> */}
+                          {/* <div className="d-flex align-items-center justify-content-center flex-wrap">
                             <div className="text-center me-2 flex-fill">
                               <Link
                                 to="#"
@@ -196,7 +196,7 @@ const Signin = () => {
                                 Facebook
                               </Link>
                             </div>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                       <div className="mt-5 text-center">

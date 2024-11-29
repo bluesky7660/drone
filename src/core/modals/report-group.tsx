@@ -29,7 +29,7 @@ const ReportGroup = () => {
                 <p className="text-gray-9">
                   If you block this contact and clear the chat, messages will
                   only be removed from this device and your devices on the newer
-                  versions of DreamsChat
+                  versions of Kallaris
                 </p>
               </div>
               <div className="d-flex align-items-center">

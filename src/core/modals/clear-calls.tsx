@@ -26,7 +26,7 @@ const ClearCalls = () => {
               <i className="ti ti-trash text-danger" />
             </span>
             <p className="text-grya-9">
-            Clearing or deleting entire call will only remove call log from this device and your devices on the newer versions of DreamsChat.
+            Clearing or deleting entire call will only remove call log from this device and your devices on the newer versions of Kallaris.
             </p>
           </div>
           <div className="row g-3">

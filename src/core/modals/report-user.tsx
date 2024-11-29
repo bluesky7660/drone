@@ -25,7 +25,7 @@ const ReportUser = () => {
               <p className="text-grya-9 mb-3">
                 If you block this contact and clear the chat, messages will only
                 be removed from this device and your devices on the newer
-                versions of DreamsChat
+                versions of Kallaris
               </p>
               <div className="form-check">
                 <input

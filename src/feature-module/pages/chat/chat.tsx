@@ -30,7 +30,7 @@ const Chat: React.FC = () => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
-  const [otherUser, setOtherUser] = useState<{ mmName: string; mmNickName?: string } | null>(null);
+  const [otherUser, setOtherUser] = useState<{ uid: string; mmName: string; mmNickName?: string } | null>(null);
   const [showSearch, setShowSearch] = useState(false);
   const [showEmoji, setShowEmoji] = useState<boolean[]>([]);
 
@@ -58,7 +58,7 @@ const Chat: React.FC = () => {
 
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          setOtherUser({ mmName: userData.mmName, mmNickName: userData.mmNickName });
+          setOtherUser({uid:otherUserId, mmName: userData.mmName, mmNickName: userData.mmNickName });
         }
       }
     } catch (error) {
@@ -144,9 +144,11 @@ const Chat: React.FC = () => {
         senderId: state.uid,
         text: message,
         isRead: false,
+        isOpenAI: false,
       };
 
       await addDoc(messageRef, newMessage);
+      console.log("otherUser",otherUser?.uid);
 
       const chatRoomRef = doc(firebaseDB, "chatRooms", chatId);
 
@@ -210,9 +212,9 @@ const Chat: React.FC = () => {
               <div className="d-xl-none">
                 {/* <div className="text-muted chat-close me-2"
                         onClick={() => navigate('/index')}> */}
-                <Link className="text-muted chat-close me-2 p-2" to="#">
+                <button className="text-muted chat-close me-2 p-2">
                   <i className="fas fa-arrow-left" />
-                </Link>
+                </button>
                 {/* </div> */}
               </div>
               <div className="avatar avatar-lg online flex-shrink-0">

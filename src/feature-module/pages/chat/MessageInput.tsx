@@ -32,7 +32,6 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   // 메시지 전송
   const handleSendMessage = () => {
     if (newMessage.trim() === '') return; // 비어있는 메시지는 전송하지 않음
-    // console.log("newMessage.trim():",newMessage.trim());
     onSendMessage(newMessage); // 상위 컴포넌트로 메시지 전송
     setIsSend(true);
     setNewMessage(''); // 입력창 비우기
