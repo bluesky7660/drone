@@ -59,6 +59,7 @@ const Signin = () => {
           mmNickName: userData.mmNickName,
           mmPassword: userData.mmPassword,
           mmPhoneNum: userData.mmPhoneNum,
+          mmIntro: userData.mmInfo,
           mmRegDate: userData.mmRegDate,
         };
         console.log('memberData 데이터:', memberData);

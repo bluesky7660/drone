@@ -13,6 +13,7 @@ interface Member {
   mmNickName: string;   // 닉네임
   mmPassword: string;   // 비밀번호
   mmPhoneNum: string;   // 전화번호
+  mmIntro:string;
   mmRegDate: Timestamp | null;    // 등록일
 }
 
@@ -32,6 +33,7 @@ const initialState: Member = {
   mmNickName: '',
   mmPassword: '',
   mmPhoneNum: '',
+  mmIntro:'',
   mmRegDate: null,
 };
 

@@ -84,7 +84,7 @@ export const ProfileTab = () => {
                   </div>
                   <div className="d-flex profile-list  profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
-                      <h6 className="fs-14">Gender</h6>
+                      <h6 className="fs-14">성별</h6>
                       <p className="fs-16">{state.mmGender === 1 ? "남자" : state.mmGender === 2 ? "여자" : "알 수 없음"}</p>
                     </div>
                     <span>
@@ -103,7 +103,7 @@ export const ProfileTab = () => {
                   <div className="d-flex profile-list profile-list justify-content-between align-items-center border-bottom mb-3 pb-3">
                     <div>
                       <h6 className="fs-14">자기소개</h6>
-                      <p className="fs-16"></p>
+                      <p className="fs-16">{state.mmIntro != null ? state.mmIntro : `안녕 난 ${state.mmNickName || state.mmName}`}</p>
                     </div>
                     <span>
                       <i className="ti ti-user-check fs-16" />

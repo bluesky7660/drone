@@ -32,6 +32,7 @@ export const ContactProvider: React.FC<{ children: ReactNode }> = ({ children })
                         mmNickName: memberData.mmNickName,
                         mmPassword: memberData.mmPassword,
                         mmPhoneNum: memberData.mmPhoneNum,
+                        mmIntro:memberData.mmIntro || null,
                         mmRegDate: memberData.mmRegDate || null,
                     } as Member;
                 }

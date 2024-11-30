@@ -76,7 +76,7 @@ const ContactTab = () => {
                   {contacts[letter].map((contact: Contact) => 
                     // 현재 로그인한 유저 제외하고 목록에 보여주기
                     (
-                    <div className="chat-list">
+                    <div key={contact.uid} className="chat-list">
                       <Link
                         to="#"
                         data-bs-toggle="modal"

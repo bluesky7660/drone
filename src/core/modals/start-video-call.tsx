@@ -1,42 +1,91 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import ImageWithBasePath from '../common/imageWithBasePath';
 import useAuth from '@/etc/UseAuth';
 import { Member } from '@context/memberContext';
+import DailyIframe,{DailyCall, DailyEvent } from '@daily-co/daily-js';
+import {useContact} from '@context/contactContext';
+import {useDaily} from '@context/dailyContext'
 
-interface StartVideoCallProps {
-  selectedContact: Member | null;
-}
 
-const StartVideoCall: React.FC<StartVideoCallProps> = ({ selectedContact }) => {
+
+const StartVideoCall: React.FC = () => {
   const [muteMic, setMuteMic] = useState(false);
   const [muteVideo, setMuteVideo] = useState(true);
   const [chatMessages, setChatMessages] = useState<string[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [callTime, setCallTime] = useState(0); // Time in seconds
   const [isCallActive, setIsCallActive] = useState(false); // Indicates if the call is active
-  const { currentUserId } = useAuth();
+  const { selectedContact, setSelectedContact } = useContact();
+  const { roomUrl, isVideoCallActive, setIsVideoCallActive, onClose } = useDaily();
+  
 
+  // const videoRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // const { currentUserId } = useAuth();
+  const callFrame = useRef<DailyCall | null>(null);
+
+  
+  // useEffect(() => {
+  //   const container = document.getElementById('daily-frame-container');
+  //   if(container){
+  //     if (roomUrl && !callFrame.current) { // callFrame.current가 null이면 새로 생성
+  //       callFrame.current = DailyIframe.createFrame({
+  //         url: roomUrl,
+  //         showLeaveButton: true,
+  //       });
+    
+        
+  //       // if (container) {
+  //       //   callFrame.current.attach(container);
+  //       // }
+    
+  //       callFrame.current.on('joined-meeting', () => {
+  //         console.log('Joined meeting:');
+  //         setIsCallActive(true);
+  //       });
+    
+  //       callFrame.current.on('left-meeting', () => {
+  //         console.log('Left the meeting');
+  //         setIsCallActive(false);
+  //       });
+  //     }
+    
+  //     return () => {
+  //       if (callFrame.current) {
+  //         callFrame.current.destroy();
+  //         callFrame.current = null; // 인스턴스 제거 후 null 설정
+  //       }
+  //     };
+  //   }
+  // }, [roomUrl]);
+  
   // Declare timer outside the useEffect so it's accessible for cleanup
-  let timer: NodeJS.Timeout;
 
   useEffect(() => {
     if (isCallActive) {
-      timer = setInterval(() => {
+      timerRef.current = setInterval(() => {
         setCallTime((prevTime) => prevTime + 1);
       }, 1000);
     } else {
-      clearInterval(timer);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
     }
-
-    // Clean up the interval when the component unmounts or the call ends
-    return () => clearInterval(timer);
+  
+    // 컴포넌트 언마운트 시 클리어
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
   }, [isCallActive]);
 
   const toggleCall = () => {
     setIsCallActive(!isCallActive);
     if (!isCallActive) {
-      setCallTime(0); // Reset time when starting a new call
+      setCallTime(0); // 새로 시작할 때 시간 리셋
     }
   };
 
@@ -60,10 +109,11 @@ const StartVideoCall: React.FC<StartVideoCallProps> = ({ selectedContact }) => {
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
-
+  // if (!roomUrl) return null;
   return (
     <>
-      {selectedContact ? (<div
+      {/* {selectedContact&&isVideoCallActive ? ( */}
+        <div
         className="modal video-call-popup fade"
         id="start-video-call"
         data-bs-backdrop="static"
@@ -109,8 +159,18 @@ const StartVideoCall: React.FC<StartVideoCallProps> = ({ selectedContact }) => {
               <div className="modal-body border-0 pt-0">
                 <div className="video-call-view br-8 overflow-hidden position-relative">
                   <ImageWithBasePath src="assets/img/video/video-member-01.jpg" alt="user-image" />
+                  
                   <div className={`mini-video-view active br-8 overflow-hidden position-absolute ${muteVideo ? 'no-video' : ''}`}>
-                    <ImageWithBasePath src="assets/img/video/user-image.jpg" alt="" />
+                    {/* <ImageWithBasePath src="assets/img/video/user-image.jpg" alt="" /> */}
+                    {/* <div className="video-container">
+                      <div id="daily-frame-container" className="video-frame" ref={videoRef}></div>
+                    </div> */}
+                    <iframe
+                      className='video-box'
+                      src={roomUrl||undefined}
+                      // style={{ width: '100%', height: '500px', border: 'none' }}
+                      title="Video Call"
+                    ></iframe>
                     <div className="bg-soft-primary mx-auto default-profile rounded-circle align-items-center justify-content-center">
                       <span className="avatar avatar-lg rounded-circle bg-primary">
                         RG
@@ -144,6 +204,7 @@ const StartVideoCall: React.FC<StartVideoCallProps> = ({ selectedContact }) => {
                   <Link
                     to="#"
                     data-bs-dismiss="modal"
+                    onClick={onClose}
                     className="call-controll call-decline d-flex align-items-center justify-content-center"
                   >
                     <i className="ti ti-phone" />
@@ -200,7 +261,8 @@ const StartVideoCall: React.FC<StartVideoCallProps> = ({ selectedContact }) => {
             </div>
           </div>
         </div>
-      </div>) : null}
+      </div>
+      {/* ) : null} */}
     </>
   );
 };

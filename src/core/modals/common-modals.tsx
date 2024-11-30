@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import NewChat from './newChat'
 import DeleteAccount from './delete-account'
 import DeleteChat from './delete-chat'
@@ -19,7 +19,16 @@ import MuteNotification from './mute-notification'
 import { useContact } from '@context/contactContext';
 
 const CommonModals = () => {
-  const { selectedContact, setSelectedContact } = useContact();
+  // const { selectedContact, setSelectedContact } = useContact();
+  // const [isVideoCallOpen, setVideoCallOpen] = useState(false);
+  // const [videoRoomUrl, setVideoRoomUrl] = useState<string | null>(null);
+  // const openVideoCall = () => {
+  //   setVideoCallOpen(true);
+  // };
+  // const closeModal = () => {
+  //   setVideoCallOpen(false);
+  //   setVideoRoomUrl(null); // 모달 닫을 때 URL 초기화
+  // };
   return (
     <>
     <NewChat/>
@@ -28,7 +37,7 @@ const CommonModals = () => {
     <DeleteAccount/>
     <VideoCall/>
     <VideoGroup/>
-    <StartVideoCall selectedContact={selectedContact} />
+    <StartVideoCall/>
     <VoiceAttend/>
     <VoiceCall/>
     <VoiceGroup/>
