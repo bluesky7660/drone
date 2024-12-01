@@ -47,7 +47,7 @@ const Signin = () => {
           return;
         }
         console.log('사용자 데이터:', userData);
-        
+      
         // 로그인 후 받아온 회원 정보 상태에 저장
         const memberData = {
           uid:user.uid,
