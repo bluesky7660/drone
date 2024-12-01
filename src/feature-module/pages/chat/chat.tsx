@@ -23,6 +23,7 @@ interface Message {
   text: string;
   createdAt: Timestamp;
   isRead: boolean;
+  isOpenAI:boolean;
 }
 
 const Chat: React.FC = () => {
@@ -31,6 +32,7 @@ const Chat: React.FC = () => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState<string>("");
+  const [isaiMessage, setAiMessage] = useState<string>("");
   const [otherChatUser, setOtherChatUser] = useState<{ uid: string; mmName: string; mmNickName?: string } | null>(null);
   const [showSearch, setShowSearch] = useState(false);
   const [showEmoji, setShowEmoji] = useState<boolean[]>([]);
@@ -131,13 +133,17 @@ const Chat: React.FC = () => {
       
     });
   };
-
+  function delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
   /**
    * 메시지 전송
    */
+  // const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
   const handleSendMessage = async (message: string) => {
     if (!chatId || !message.trim()) return;
     console.log("newMessage.trim():",message);
+    // await delay(1000);
     try {
       const messageRef = collection(firebaseDB, "chatRooms", chatId, "messages");
       const newMessage = {
@@ -151,50 +157,77 @@ const Chat: React.FC = () => {
       await addDoc(messageRef, newMessage);
       console.log("otherChatUser",otherChatUser?.uid);
       // OpenAI API 호출하여 답변 생성
-      try {
-        const response = await axios.post(
-          'https://api.openai.com/v1/chat/completions',
-          {
-            model: 'gpt-3.5-turbo',
-            messages: [
-              { role: 'user', content: message }
-            ]
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+      const sendToOpenAI = async (message: string) => {
+        try {
+          const response = await axios.post(
+            'https://api.openai.com/v1/chat/completions',
+            {
+              model: 'gpt-3.5-turbo',
+              messages: [
+                { role: 'user', content:"짧게 대답해주세요."+ message }
+              ],
+              max_tokens: 90
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+              }
             }
+          );
+  
+          const aiResponse = response.data.choices[0].message.content;
+  
+          // AI의 답변 Firestore에 추가
+          const aiMessage = {
+            createdAt: Timestamp.now(),
+            senderId: otherChatUser?.uid, // AI가 보낸 답변을 상대방 ID로 설정
+            text: aiResponse,
+            isRead: true,
+            isOpenAI: true, // AI의 메시지임을 구분
+          };
+          await addDoc(messageRef, aiMessage);
+          // setAiMessage(aiResponse);
+  
+          return aiResponse; // 응답 반환
+  
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            if (error.response?.status === 429) {
+              // 호출 제한 초과 시 대기 후 재시도
+              console.warn("API 호출 제한 초과. 5초 후 재시도합니다.");
+              await delay(5000); // 5초 대기
+              return sendToOpenAI(message); // 재시도 호출
+            }
+            // 네트워크 오류 처리
+            console.error("OpenAI API 호출 중 네트워크 오류 발생:", error.message);
+            alert("AI 응답을 가져오는 중 오류가 발생했습니다. 다시 시도해 주세요.");
+          } else {
+            // 예상치 못한 오류 처리
+            console.error("예상치 못한 오류 발생:", error);
           }
-        );
-
-        const aiResponse = response.data.choices[0].message.content;
-
-        // AI의 답변 Firestore에 추가
-        const aiMessage = {
-          createdAt: Timestamp.now(),
-          senderId: otherChatUser?.uid, // AI가 보낸 답변을 상대방 ID로 설정
-          text: aiResponse,
-          isRead: true,
-          isOpenAI: true, // AI의 메시지임을 구분
-        };
-        await addDoc(messageRef, aiMessage);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          // Axios 에러의 경우
-          console.error("OpenAI API 호출 중 네트워크 오류 발생:", error.message);
-          alert("AI 응답을 가져오는 중 오류가 발생했습니다. 다시 시도해 주세요.");
-        } else {
-          // 예상치 못한 오류 처리
-          console.error("예상치 못한 오류 발생:", error);
         }
-      }
+      };
+  
+      // OpenAI 호출 시도
+      const aiResponse = await sendToOpenAI(message);
       const chatRoomRef = doc(firebaseDB, "chatRooms", chatId);
+      console.log("aiMessage  :",aiResponse);
+      console.log("message:",message);
+      if(aiResponse){
+        await updateDoc(chatRoomRef, {
+          lastMessage: aiResponse,
+          lastMessageTime: Timestamp.now(),
+        });
+      }else{
+        await updateDoc(chatRoomRef, {
+          lastMessage: message,
+          lastMessageTime: Timestamp.now(),
+        });
+      }
+      
 
-      await updateDoc(chatRoomRef, {
-        lastMessage: message,
-        lastMessageTime: Timestamp.now(),
-      });
+      
       setNewMessage("");
     } catch (error) {
       console.error("메시지 전송 중 오류 발생:", error);

@@ -12,6 +12,7 @@ interface Message {
   text: string;
   createdAt: Timestamp; // 메시지 생성 시간
   isRead: boolean;
+  isOpenAI:boolean;
 }
 
 interface MessageListProps {
@@ -86,7 +87,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEm
             <div className="messages">
             {messages.map((message,index) => (
                 <div
-                key={message.id}
+                key={message.id|| index}
                 className={`chats ${message.senderId === currentUserId ? 'chats-right' : ''}`}
                 >
                     <div className="chat-avatar">
@@ -99,7 +100,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, toggleEmoji, showEm
                     <div className="chat-content">
                         <div className="chat-profile-name">
                             <h6>
-                                {message.senderName}
+                                {message.isOpenAI === true ? `${message.senderName} (AI)`: message.senderName}
                                 <i className="ti ti-circle-filled fs-7 mx-2" />
                                 <span className={`msg-read ${message.isRead ? 'success' : ''}`}>
                                 <i className="ti ti-checks" />
