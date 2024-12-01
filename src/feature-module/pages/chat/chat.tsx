@@ -157,7 +157,6 @@ const Chat: React.FC = () => {
       await addDoc(messageRef, newMessage);
       console.log("otherChatUser",otherChatUser?.uid);
       // OpenAI API 호출하여 답변 생성
-      console.log("test:",process.env.REACT_APP_OPENAI_API_KEY);
       const sendToOpenAI = async (message: string) => {
         try {
           const response = await axios.post(
